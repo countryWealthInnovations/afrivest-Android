@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517362311917",
+    "project_id": "afrivest-57eb6",
+    "storage_bucket": "afrivest-57eb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517362311917:android:d95109dad78b07b2a862e4",
+        "android_client_info": {
+          "package_name": "com.afrivest.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrv_UTIxG3pm7ax2et-3oS4CwnlT7tdwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
