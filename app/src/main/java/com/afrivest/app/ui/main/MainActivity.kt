@@ -1,60 +1,122 @@
 package com.afrivest.app.ui.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.fragment.app.Fragment
 import com.afrivest.app.R
 import com.afrivest.app.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
+import com.afrivest.app.ui.dashboard.DashboardFragment
+import com.afrivest.app.ui.assets.AssetsFragment
+import com.afrivest.app.ui.history.HistoryFragment
+import com.afrivest.app.ui.profile.ProfileFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private var isFabExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        setupBottomNavigation()
+        setupFAB()
 
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+        // Load default fragment
+        if (savedInstanceState == null) {
+            loadFragment(DashboardFragment())
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    loadFragment(DashboardFragment())
+                    true
+                }
+                R.id.nav_assets -> {
+                    loadFragment(AssetsFragment())
+                    true
+                }
+                R.id.nav_history -> {
+                    loadFragment(HistoryFragment())
+                    true
+                }
+                R.id.nav_profile -> {
+                    loadFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
         }
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
-//    }
+    private fun setupFAB() {
+        binding.fab.setOnClickListener {
+            if (isFabExpanded) {
+                collapseFAB()
+            } else {
+                expandFAB()
+            }
+        }
+
+        binding.fabSendMoney.setOnClickListener {
+            // TODO: Navigate to send money
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Send Money")
+                .setMessage("Send money feature coming soon")
+                .setPositiveButton("OK", null)
+                .show()
+            collapseFAB()
+        }
+
+        binding.fabReceiveMoney.setOnClickListener {
+            // TODO: Navigate to receive money
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Receive Money")
+                .setMessage("Receive money feature coming soon")
+                .setPositiveButton("OK", null)
+                .show()
+            collapseFAB()
+        }
+
+        binding.fabOverlay.setOnClickListener {
+            collapseFAB()
+        }
+    }
+
+    private fun expandFAB() {
+        isFabExpanded = true
+        binding.fabOverlay.visibility = android.view.View.VISIBLE
+        binding.fabSendMoney.show()
+        binding.fabReceiveMoney.show()
+        binding.fab.setImageResource(R.drawable.ic_close)
+    }
+
+    private fun collapseFAB() {
+        isFabExpanded = false
+        binding.fabOverlay.visibility = android.view.View.GONE
+        binding.fabSendMoney.hide()
+        binding.fabReceiveMoney.hide()
+        binding.fab.setImageResource(R.drawable.ic_add)
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
+    override fun onBackPressed() {
+        if (isFabExpanded) {
+            collapseFAB()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }

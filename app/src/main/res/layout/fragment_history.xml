@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xl"
-            android:text="Home Dashboard"
+            android:text="Transaction History"
             android:textColor="@color/text_primary" />
 
         <TextView
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
-            android:text="Content coming soon..."
+            android:text="Your transaction history will appear here"
             android:textColor="@color/text_secondary" />
 
     </LinearLayout>

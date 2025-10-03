@@ -119,7 +119,9 @@ class OTPActivity : AppCompatActivity() {
         // Navigate to Dashboard
         viewModel.navigateToDashboard.observe(this) { navigate ->
             if (navigate) {
-                startActivity(Intent(this, MainActivity::class.java))
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
             }
         }
