@@ -14,14 +14,14 @@ class SecurePreferences(context: Context) {
 
     private val encryptedPrefs: SharedPreferences = EncryptedSharedPreferences.create(
         context,
-        "afrivrest_secure_prefs",
+        "afrivest_secure_prefs",
         masterKey,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
     private val regularPrefs: SharedPreferences = context.getSharedPreferences(
-        "afrivrest_prefs",
+        "afrivest_prefs",
         Context.MODE_PRIVATE
     )
 

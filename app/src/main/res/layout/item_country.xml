@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_md"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical">
+
+    <!-- Flag -->
+    <TextView
+        android:id="@+id/tvFlag"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:text="🇺🇬" />
+
+    <!-- Country Name -->
+    <TextView
+        android:id="@+id/tvCountryName"
+        style="@style/TextAppearance.BodyLarge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_md"
+        android:text="Uganda"
+        android:textColor="@color/text_primary" />
+
+    <!-- Dial Code -->
+    <TextView
+        android:id="@+id/tvDialCode"
+        style="@style/TextAppearance.BodyRegular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+256"
+        android:textColor="@color/text_secondary" />
+
+</LinearLayout>

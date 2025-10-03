@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:weightSum="6">
+
+    <EditText
+        android:id="@+id/otpBox1"
+        style="@style/Widget.App.OTPBox"
+        android:layout_marginEnd="@dimen/spacing_sm" />
+
+    <EditText
+        android:id="@+id/otpBox2"
+        style="@style/Widget.App.OTPBox"
+        android:layout_marginEnd="@dimen/spacing_sm" />
+
+    <EditText
+        android:id="@+id/otpBox3"
+        style="@style/Widget.App.OTPBox"
+        android:layout_marginEnd="@dimen/spacing_sm" />
+
+    <EditText
+        android:id="@+id/otpBox4"
+        style="@style/Widget.App.OTPBox"
+        android:layout_marginEnd="@dimen/spacing_sm" />
+
+    <EditText
+        android:id="@+id/otpBox5"
+        style="@style/Widget.App.OTPBox"
+        android:layout_marginEnd="@dimen/spacing_sm" />
+
+    <EditText
+        android:id="@+id/otpBox6"
+        style="@style/Widget.App.OTPBox" />
+
+</LinearLayout>

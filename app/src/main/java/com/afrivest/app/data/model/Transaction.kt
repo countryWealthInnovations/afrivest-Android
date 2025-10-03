@@ -2,6 +2,7 @@ package com.afrivest.app.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
 @Parcelize
 data class Transaction(
@@ -48,7 +49,7 @@ data class Transaction(
         "bill_payment" -> "Bill Payment"
         "gold_purchase" -> "Gold Purchase"
         "crypto_purchase" -> "Crypto Purchase"
-        else -> type.capitalize()
+        else -> type.capitalize(Locale.ROOT)
     }
 }
 

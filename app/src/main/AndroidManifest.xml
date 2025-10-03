@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-
-    <!-- CAMERA FEATURE -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- CAMERA FEATURE -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -22,7 +20,7 @@
         android:required="false" />
 
     <application
-        android:name=".AfriVRestApplication"
+        android:name=".AfriVestApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -30,118 +28,99 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AfriVest"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false" />
         <!-- SPLASH SCREEN ACTIVITY -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AfriVest">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- MAIN ACTIVITY -->
+        </activity> <!-- MAIN ACTIVITY -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- AUTH ACTIVITIES -->
+            android:windowSoftInputMode="adjustResize" /> <!-- AUTH ACTIVITIES -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.auth.OTPActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.auth.ForgotPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- WALLET ACTIVITIES -->
+            android:windowSoftInputMode="adjustResize" /> <!-- WALLET ACTIVITIES -->
         <activity
             android:name=".ui.wallet.WalletDetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ui.main.MainActivity" />
-
-        <!-- TRANSACTION ACTIVITIES -->
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" /> <!-- TRANSACTION ACTIVITIES -->
         <activity
             android:name=".ui.transaction.TransactionDetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ui.main.MainActivity" />
-
-        <!-- TRANSFER ACTIVITIES -->
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" /> <!-- TRANSFER ACTIVITIES -->
         <activity
             android:name=".ui.transfer.DepositActivity"
             android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".ui.main.MainActivity" />
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.transfer.WithdrawActivity"
             android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".ui.main.MainActivity" />
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.transfer.P2PTransferActivity"
             android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".ui.main.MainActivity" />
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.transfer.BillPaymentActivity"
             android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".ui.main.MainActivity" />
-
-        <!-- FIREBASE MESSAGING SERVICE -->
+            android:windowSoftInputMode="adjustResize" /> <!-- FIREBASE MESSAGING SERVICE -->
         <service
-            android:name=".services.FirebaseMessagingService"
+            android:name=".services.AfriVestMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- FIREBASE DEFAULT NOTIFICATION METADATA -->
+        </service> <!-- FIREBASE DEFAULT NOTIFICATION METADATA -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorPrimary" />
+            android:resource="@color/primary_gold" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
-
-        <!-- FILE PROVIDER (for camera image capture) -->
+            android:value="@string/default_notification_channel_id" /> <!-- FILE PROVIDER (for camera image capture) -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -151,7 +130,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

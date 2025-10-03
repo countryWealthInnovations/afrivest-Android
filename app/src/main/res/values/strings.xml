@@ -1,6 +1,32 @@
 <resources>
     <string name="app_name">AfriVest</string>
     <string name="action_settings">Settings</string>
-    <string name="default_notification_channel_id">general_notifications</string>
 
+    <!-- Splash Screen -->
+    <string name="copyright_afrivest">© AfriVest</string>
+    <string name="money_bag_icon">Money bag icon</string>
+    <string name="financial_pattern">Financial pattern background</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+    <string name="onboarding_image">Onboarding illustration</string>
+
+    <string name="onboarding_title_1">Invest in Your Family\'s Future</string>
+    <string name="onboarding_desc_1">Transform every remittance into a wealth-building opportunity in real estate and portfolio growth.</string>
+
+    <string name="onboarding_title_2">Cross-Border Health Insurance</string>
+    <string name="onboarding_desc_2">Secure your family\'s health with tailored insurance coverage for both home and abroad.</string>
+
+    <string name="onboarding_title_3">Gold &amp; Crypto Marketplace</string>
+    <string name="onboarding_desc_3">Turn remittances into tangible assets that hedge against inflation and preserve long-term value.</string>
+
+    <!-- Register Screen -->
+    <string name="select_country">Select country</string>
+
+    <!-- Firebase -->
+    <string name="default_notification_channel_id">afrivest_notifications</string>
+
+    <string name="back">Back</string>
 </resources>

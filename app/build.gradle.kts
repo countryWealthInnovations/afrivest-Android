@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.afrivest.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.afrivest.app"
@@ -84,6 +84,7 @@ dependencies {
 
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
+    implementation(libs.androidx.activity)
     ksp(libs.hilt.compiler)
 
     // Room Database

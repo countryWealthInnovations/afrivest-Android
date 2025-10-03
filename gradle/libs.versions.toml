@@ -65,6 +65,7 @@ leakcanary = "2.13"
 # Testing
 mockito = "5.8.0"
 coroutinesTest = "1.7.3"
+activity = "1.11.0"
 
 [libraries]
 # Core Android
@@ -147,6 +148,7 @@ mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mo
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

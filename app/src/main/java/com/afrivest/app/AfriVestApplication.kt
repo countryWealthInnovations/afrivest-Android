@@ -5,11 +5,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import com.afrivest.app.utils.Constants
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class AfriVRestApplication : Application() {
+class AfriVestApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,8 +25,9 @@ class AfriVRestApplication : Application() {
 
         // Create notification channels
         createNotificationChannels()
+        getFCMToken()
 
-        Timber.d("AfriVRest Application Started")
+        Timber.d("AfriVest Application Started")
     }
 
     private fun createNotificationChannels() {
@@ -54,6 +56,17 @@ class AfriVRestApplication : Application() {
 
             notificationManager.createNotificationChannel(transactionChannel)
             notificationManager.createNotificationChannel(generalChannel)
+        }
+    }
+
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Timber.d("FCM Token: $token")
+            } else {
+                Timber.e(task.exception, "Failed to get FCM token")
+            }
         }
     }
 }

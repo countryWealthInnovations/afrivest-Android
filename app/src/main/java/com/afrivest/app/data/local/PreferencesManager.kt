@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 class PreferencesManager(context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(
-        "afrivrest_settings",
+        "afrivest_settings",
         Context.MODE_PRIVATE
     )
 

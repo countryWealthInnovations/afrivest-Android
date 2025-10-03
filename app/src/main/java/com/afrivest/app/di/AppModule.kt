@@ -1,6 +1,7 @@
 package com.afrivest.app.di
 
 import android.content.Context
+import androidx.biometric.BiometricManager
 import com.afrivest.app.data.api.ApiClient
 import com.afrivest.app.data.api.ApiService
 import com.afrivest.app.data.local.PreferencesManager
@@ -12,8 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
-// ==================== APP MODULE ====================
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,5 +32,13 @@ object AppModule {
         @ApplicationContext context: Context
     ): PreferencesManager {
         return PreferencesManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBiometricManager(
+        @ApplicationContext context: Context
+    ): BiometricManager {
+        return BiometricManager.from(context)
     }
 }
