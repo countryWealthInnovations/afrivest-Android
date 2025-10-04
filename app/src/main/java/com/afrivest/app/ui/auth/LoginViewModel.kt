@@ -56,6 +56,9 @@ class LoginViewModel @Inject constructor(
     private val _navigateToDashboard = MutableLiveData(false)
     val navigateToDashboard: LiveData<Boolean> = _navigateToDashboard
 
+    private val _showEmailVerificationDialog = MutableLiveData(false)
+    val showEmailVerificationDialog: LiveData<Boolean> = _showEmailVerificationDialog
+
     // Field State Sealed Class
     sealed class FieldState {
         object Normal : FieldState()
@@ -110,15 +113,17 @@ class LoginViewModel @Inject constructor(
 
                 when (response) {
                     is Resource.Success -> {
-                        val authResponse = response.data!!
-                        val emailVerified = authResponse.user.isVerified()
-
                         _isLoading.value = false
 
-                        if (emailVerified) {
-                            _navigateToDashboard.value = true
+                        // Save verification status
+                        securePreferences.setEmailVerified(response.data!!.user.email_verified)
+                        securePreferences.setKYCVerified(response.data.user.kyc_verified)
+
+                        // Check email verification
+                        if (!response.data.user.email_verified) {
+                            _showEmailVerificationDialog.value = true
                         } else {
-                            _navigateToOTP.value = true
+                            _navigateToDashboard.value = true
                         }
                     }
                     is Resource.Error -> {
@@ -160,5 +165,41 @@ class LoginViewModel @Inject constructor(
 
     fun skipBiometric() {
         _shouldPromptBiometricSetup.value = false
+    }
+
+    // MARK: - Email Verification
+    fun proceedToEmailVerification() {
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            try {
+                // Auto-send OTP
+                val response = authRepository.resendOTP()
+
+                when (response) {
+                    is Resource.Success -> {
+                        _isLoading.value = false
+                        _navigateToOTP.value = true
+                    }
+                    is Resource.Error -> {
+                        _isLoading.value = false
+                        _errorMessage.value = "Failed to send verification code"
+                    }
+                    else -> {}
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to send OTP")
+                _isLoading.value = false
+                _errorMessage.value = "Failed to send verification code. Please try again."
+            }
+        }
+    }
+
+    fun skipEmailVerification() {
+        _navigateToDashboard.value = true
+    }
+
+    private fun canSetupBiometric(): Boolean {
+        return biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
     }
 }

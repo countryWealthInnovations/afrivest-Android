@@ -11,10 +11,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import com.afrivest.app.data.local.SecurePreferences
 
 @HiltViewModel
 class OTPViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val securePreferences: SecurePreferences
 ) : ViewModel() {
 
     private val _email = MutableLiveData("")
@@ -90,6 +92,10 @@ class OTPViewModel @Inject constructor(
                 when (response) {
                     is Resource.Success -> {
                         _isLoading.value = false
+
+                        // Update email verification status
+                        securePreferences.setEmailVerified(true)
+
                         _navigateToDashboard.value = true
                     }
                     is Resource.Error -> {

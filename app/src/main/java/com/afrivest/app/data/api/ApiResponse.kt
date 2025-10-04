@@ -30,7 +30,9 @@ data class AuthResponse(
 data class OTPResponse(
     val otp_sent: Boolean,
     val otp_channel: String,
-    val expires_in: Int
+    val expires_in: Int,
+    val user: User? = null,
+    val email_verified: Boolean? = null
 )
 
 data class AvatarResponse(

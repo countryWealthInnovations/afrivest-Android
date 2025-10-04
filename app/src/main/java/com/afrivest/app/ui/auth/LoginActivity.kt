@@ -145,6 +145,23 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // Show Email Verification Dialog
+        viewModel.showEmailVerificationDialog.observe(this) { show ->
+            if (show) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Email Verification Required")
+                    .setMessage("Please verify your email to unlock all features. A verification code will be sent to your email.")
+                    .setPositiveButton("Verify Now") { _, _ ->
+                        viewModel.proceedToEmailVerification()
+                    }
+                    .setNegativeButton("Later") { _, _ ->
+                        viewModel.skipEmailVerification()
+                    }
+                    .setCancelable(false)
+                    .show()
+            }
+        }
+
         // Navigate to Dashboard
         viewModel.navigateToDashboard.observe(this) { navigate ->
             if (navigate) {

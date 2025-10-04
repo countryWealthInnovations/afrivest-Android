@@ -118,6 +118,24 @@ class SecurePreferences(context: Context) {
         return regularPrefs.getLong(Constants.PrefsKeys.LAST_SYNC, 0)
     }
 
+    // ==================== VERIFICATION STATUS ====================
+
+    fun setEmailVerified(verified: Boolean) {
+        regularPrefs.edit().putBoolean("email_verified", verified).apply()
+    }
+
+    fun isEmailVerified(): Boolean {
+        return regularPrefs.getBoolean("email_verified", false)
+    }
+
+    fun setKYCVerified(verified: Boolean) {
+        regularPrefs.edit().putBoolean("kyc_verified", verified).apply()
+    }
+
+    fun isKYCVerified(): Boolean {
+        return regularPrefs.getBoolean("kyc_verified", false)
+    }
+
     // ==================== CLEAR ALL ====================
 
     fun clearAll() {

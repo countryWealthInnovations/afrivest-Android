@@ -7,25 +7,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/screen_horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            style="@style/TextAppearance.H1"
+        <!-- KYC Banner -->
+        <include
+            android:id="@+id/kycBanner"
+            layout="@layout/view_kyc_banner"
+            android:visibility="gone" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xl"
-            android:text="Home Dashboard"
-            android:textColor="@color/text_primary" />
+            android:orientation="vertical"
+            android:padding="@dimen/screen_horizontal">
 
-        <TextView
-            style="@style/TextAppearance.BodyRegular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_md"
-            android:text="Content coming soon..."
-            android:textColor="@color/text_secondary" />
+            <TextView
+                style="@style/TextAppearance.H1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xl"
+                android:text="Home Dashboard"
+                android:textColor="@color/text_primary" />
 
+            <TextView
+                style="@style/TextAppearance.BodyRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:text="Content coming soon..."
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

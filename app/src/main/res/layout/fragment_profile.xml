@@ -26,6 +26,63 @@
             android:text="Your profile settings will appear here"
             android:textColor="@color/text_secondary" />
 
+        <!-- Settings Section -->
+        <TextView
+            style="@style/TextAppearance.H3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xl"
+            android:text="Security Settings"
+            android:textColor="@color/text_primary" />
+
+        <!-- Biometric Authentication Toggle -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            app:cardBackgroundColor="@color/input_background"
+            app:cardCornerRadius="@dimen/radius_medium"
+            app:cardElevation="0dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_md"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Biometric Login"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        style="@style/TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Coming Soon"
+                        android:textColor="@color/warning_yellow" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchBiometric"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    app:thumbTint="@color/text_disabled"
+                    app:trackTint="@color/border_default" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

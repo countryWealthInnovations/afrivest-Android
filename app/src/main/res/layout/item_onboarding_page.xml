@@ -28,7 +28,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_marginTop="@dimen/spacing_xl"
             android:paddingHorizontal="@dimen/screen_horizontal">
 
             <TextView
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/screen_horizontal"
-            android:paddingBottom="@dimen/spacing_sm">
+            android:paddingBottom="@dimen/spacing_md">
 
             <!-- Page Indicators - aligned right -->
             <LinearLayout

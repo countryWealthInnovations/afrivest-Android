@@ -12,12 +12,14 @@ data class User(
     val role: String,
     val status: String,
     val avatar_url: String? = null,
-    val email_verified_at: String? = null,
+    val email_verified: Boolean = false,
+    val kyc_verified: Boolean = false,
     val created_at: String,
     val updated_at: String? = null
 ) : Parcelable {
     fun isActive(): Boolean = status == "active"
-    fun isVerified(): Boolean = email_verified_at != null
+    fun isEmailVerified(): Boolean = email_verified
+    fun isKYCVerified(): Boolean = kyc_verified
 }
 
 

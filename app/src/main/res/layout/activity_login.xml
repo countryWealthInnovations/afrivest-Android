@@ -19,6 +19,7 @@
 
             <!-- Header -->
             <TextView
+                android:layout_marginTop="@dimen/spacing_xl"
                 style="@style/TextAppearance.H1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

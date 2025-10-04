@@ -37,22 +37,37 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     loadFragment(DashboardFragment())
+                    showFAB()
                     true
                 }
                 R.id.nav_assets -> {
                     loadFragment(AssetsFragment())
+                    hideFAB()
                     true
                 }
                 R.id.nav_history -> {
                     loadFragment(HistoryFragment())
+                    hideFAB()
                     true
                 }
                 R.id.nav_profile -> {
                     loadFragment(ProfileFragment())
+                    hideFAB()
                     true
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun showFAB() {
+        binding.fab.show()
+    }
+
+    private fun hideFAB() {
+        binding.fab.hide()
+        if (isFabExpanded) {
+            collapseFAB()
         }
     }
 
