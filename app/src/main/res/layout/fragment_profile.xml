@@ -26,6 +26,27 @@
             android:text="Your profile settings will appear here"
             android:textColor="@color/text_secondary" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Logout Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/spacing_xxl"
+            android:text="Logout"
+            android:textColor="@color/error_red"
+            app:icon="@drawable/ic_logout"
+            app:iconTint="@color/error_red"
+            app:strokeColor="@color/error_red"
+            app:strokeWidth="2dp"
+            app:backgroundTint="@color/input_background"
+            app:cornerRadius="@dimen/radius_medium"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
+
     </LinearLayout>
 
 </ScrollView>
