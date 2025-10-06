@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/spacing_sm"
+    android:paddingTop="@dimen/spacing_md"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackgroundBorderless">
+
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp">
+
+        <!-- Single view for background + border (set programmatically) -->
+        <View
+            android:id="@+id/vBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Initial Text -->
+        <TextView
+            android:id="@+id/tvInitial"
+            style="@style/TextAppearance.BodyLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="JN"
+            android:textColor="#2196F3" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvName"
+        style="@style/TextAppearance.BodySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jo N"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="@dimen/spacing_sm" />
+
+</LinearLayout>

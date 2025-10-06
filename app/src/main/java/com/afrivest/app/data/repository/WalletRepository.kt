@@ -3,6 +3,7 @@ package com.afrivest.app.data.repository
 import com.afrivest.app.data.api.ApiResponse
 import com.afrivest.app.data.api.ApiService
 import com.afrivest.app.data.api.PaginatedResponse
+import com.afrivest.app.data.model.Dashboard
 import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.Transaction
 import com.afrivest.app.data.model.Wallet
@@ -17,6 +18,22 @@ class WalletRepository @Inject constructor(
     private val apiService: ApiService
 ) {
 
+    /**
+     * Get dashboard data (user, wallets, recent transactions, statistics)
+     */
+    suspend fun getDashboard(): Resource<Dashboard> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.getDashboard()
+            handleResponse(response)
+        } catch (e: Exception) {
+            Timber.e(e, "Get dashboard error")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
+    /**
+     * Get all wallets
+     */
     suspend fun getWallets(): Resource<List<Wallet>> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.getWallets()
@@ -27,6 +44,9 @@ class WalletRepository @Inject constructor(
         }
     }
 
+    /**
+     * Get wallet by currency
+     */
     suspend fun getWallet(currency: String): Resource<Wallet> = withContext(Dispatchers.IO) {
         try {
             val url = Constants.Endpoints.wallet(currency)
@@ -38,6 +58,9 @@ class WalletRepository @Inject constructor(
         }
     }
 
+    /**
+     * Get wallet transactions with pagination
+     */
     suspend fun getWalletTransactions(
         currency: String,
         page: Int = 1,
@@ -53,6 +76,9 @@ class WalletRepository @Inject constructor(
         }
     }
 
+    /**
+     * Handle API response and convert to Resource
+     */
     private fun <T> handleResponse(response: Response<ApiResponse<T>>): Resource<T> {
         return if (response.isSuccessful) {
             val body = response.body()

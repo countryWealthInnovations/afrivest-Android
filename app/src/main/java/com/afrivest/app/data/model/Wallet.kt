@@ -5,11 +5,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Wallet(
-    val id: Int,
+    val id: Int? = null,
     val currency: String,
     val balance: String,
     val status: String,
-    val formatted_balance: String,
+    val wallet_type: String? = null,
+    val formatted_balance: String? = null,
     val last_transaction_at: String? = null,
     val total_incoming: String? = null,
     val total_outgoing: String? = null,

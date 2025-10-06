@@ -100,4 +100,18 @@
         <item name="android:maxLength">1</item>
         <item name="android:inputType">number</item>
     </style>
+
+    <!-- Bottom Navigation Active Indicator -->
+    <style name="Widget.App.BottomNavigationView.ActiveIndicator" parent="">
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+        <item name="android:color">@color/primary_gold</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+    </style>
+
+    <!-- Shape for Active Indicator (Rounded Pill) -->
+    <style name="ShapeAppearance.App.SmallComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

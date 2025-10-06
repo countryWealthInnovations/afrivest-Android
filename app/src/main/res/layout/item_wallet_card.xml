@@ -1,7 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="200dp"
+    android:layout_weight="1"
+    app:cardBackgroundColor="#3A3A3A"
+    app:cardCornerRadius="@dimen/radius_medium"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/border_default"
+    app:strokeWidth="1dp">
 
+    <!-- Rest of the layout remains the same -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_md">
 
-</LinearLayout>
+        <!-- Wallet Icon -->
+        <ImageView
+            android:id="@+id/ivWalletIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_wallet"
+            app:tint="@color/primary_gold" />
+
+        <!-- Wallet Title with Hide Toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvWalletTitle"
+                style="@style/TextAppearance.BodyRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Deposit Wallet"
+                android:textColor="@color/text_secondary" />
+
+            <ImageView
+                android:id="@+id/ivHideToggle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_eye"
+                app:tint="@color/text_secondary"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Balance Amount -->
+        <TextView
+            android:id="@+id/tvBalance"
+            style="@style/TextAppearance.H3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.00 UGX"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:layout_marginBottom="@dimen/spacing_xs" />
+
+        <!-- Action Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAction"
+            style="@style/Widget.App.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="Deposit"
+            android:textSize="14sp"
+            android:minHeight="0dp"
+            app:icon="@drawable/ic_add_circle"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/spacing_xs"
+            app:iconSize="18dp"
+            app:iconTint="@color/button_primary_text" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

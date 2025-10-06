@@ -1,11 +1,13 @@
 package com.afrivest.app.data.model
 
-import com.afrivest.app.data.model.User
+import com.google.gson.annotations.SerializedName
 
 data class Dashboard(
     val user: User,
     val wallets: List<Wallet>,
-    val recent_transactions: List<Transaction>,
+    @SerializedName("recent_transactions")
+    val recentTransactions: List<Transaction>,
+    @SerializedName("stats")
     val statistics: DashboardStatistics
 )
 
