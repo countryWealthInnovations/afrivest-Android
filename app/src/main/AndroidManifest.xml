@@ -82,7 +82,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" /> <!-- TRANSFER ACTIVITIES -->
         <activity
-            android:name=".ui.transfer.DepositActivity"
+            android:name=".ui.deposit.DepositActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"

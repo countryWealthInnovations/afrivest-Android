@@ -3,6 +3,8 @@ package com.afrivest.app.data.api
 import com.afrivest.app.data.model.*
 import com.afrivest.app.utils.Constants
 import com.afrivest.app.data.model.User
+import com.afrivest.app.data.repository.SDKInitiateResponse
+import com.afrivest.app.data.repository.VerifyDepositResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -209,6 +211,14 @@ interface ApiService {
 
     @GET(Constants.Endpoints.DASHBOARD)
     suspend fun getDashboard(): Response<ApiResponse<Dashboard>>
+
+    // ==================== Flutterwave ====================
+
+    @POST("deposits/sdk/initiate")
+    suspend fun initiateSDKDeposit(@Body request: Map<String, Any>): ApiResponse<SDKInitiateResponse>
+
+    @POST("deposits/sdk/verify")
+    suspend fun verifySDKDeposit(@Body request: Map<String, Any>): ApiResponse<VerifyDepositResponse>
 }
 
 // ==================== REQUEST MODELS ====================
