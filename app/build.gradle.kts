@@ -129,9 +129,6 @@ dependencies {
     // LeakCanary (Debug only)
     debugImplementation(libs.leakcanary)
 
-    // Flutterwave
-    implementation(libs.rave.android)
-
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
