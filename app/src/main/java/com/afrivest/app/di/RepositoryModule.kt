@@ -46,9 +46,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideProfileRepository(
-        apiService: ApiService
+        apiService: ApiService,
+        securePreferences: SecurePreferences
     ): ProfileRepository {
-        return ProfileRepository(apiService)
+        return ProfileRepository(apiService, securePreferences)
     }
 
     @Provides

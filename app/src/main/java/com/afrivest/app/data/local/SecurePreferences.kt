@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.afrivest.app.data.model.ProfileData
 import com.afrivest.app.utils.Constants
 
 class SecurePreferences(context: Context) {
@@ -142,7 +143,47 @@ class SecurePreferences(context: Context) {
         encryptedPrefs.edit().clear().apply()
         regularPrefs.edit().clear().apply()
     }
+
+    // ==================== PROFILE CACHING ====================
+
+    fun saveProfile(profile: ProfileData) {
+        try {
+            val gson = com.google.gson.Gson()
+            val profileJson = gson.toJson(profile)
+            regularPrefs.edit().putString("cached_profile_data", profileJson).apply()
+
+            // Also update individual fields for backwards compatibility
+            regularPrefs.edit().putString("user_email", profile.email).apply()
+            regularPrefs.edit().putString("user_id", profile.id.toString()).apply()
+            setKYCVerified(profile.kycVerified)
+            setEmailVerified(profile.emailVerified)
+
+            timber.log.Timber.d("✅ Profile cached successfully")
+        } catch (e: Exception) {
+            timber.log.Timber.e(e, "❌ Failed to cache profile")
+        }
+    }
+
+    fun getCachedProfile(): ProfileData? {
+        return try {
+            val profileJson = regularPrefs.getString("cached_profile_data", null)
+            if (profileJson != null) {
+                val gson = com.google.gson.Gson()
+                val profile = gson.fromJson(profileJson, ProfileData::class.java)
+                timber.log.Timber.d("✅ Cached profile loaded")
+                profile
+            } else {
+                timber.log.Timber.d("⚠️ No cached profile found")
+                null
+            }
+        } catch (e: Exception) {
+            timber.log.Timber.e(e, "❌ Failed to decode cached profile")
+            null
+        }
+    }
+
+    fun clearProfile() {
+        regularPrefs.edit().remove("cached_profile_data").apply()
+        timber.log.Timber.d("🗑️ Profile cache cleared")
+    }
 }
-
-// ==================== PREFERENCES MANAGER (Non-Secure) ====================
-

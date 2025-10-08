@@ -89,11 +89,31 @@ class DashboardFragment : Fragment() {
             }
         }
 
-        // User data
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            user?.let {
+        // Profile data
+        viewModel.profile.observe(viewLifecycleOwner) { profile ->
+            profile?.let {
                 binding.tvUserName.text = it.name
-                binding.tvUserInitial.text = it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "U"
+
+                // Handle avatar
+                if (it.isDefaultAvatar()) {
+                    // Show initials
+                    binding.ivUserAvatar.visibility = View.GONE
+                    binding.vAvatarBackground.visibility = View.VISIBLE
+                    binding.tvUserInitial.visibility = View.VISIBLE
+                    binding.tvUserInitial.text = it.getUserInitials()
+                } else {
+                    // Load avatar image with Glide
+                    binding.vAvatarBackground.visibility = View.GONE
+                    binding.tvUserInitial.visibility = View.GONE
+                    binding.ivUserAvatar.visibility = View.VISIBLE
+
+                    com.bumptech.glide.Glide.with(requireContext())
+                        .load(it.avatarUrl)
+                        .placeholder(R.drawable.ic_user_placeholder)
+                        .error(R.drawable.ic_user_placeholder)
+                        .circleCrop()
+                        .into(binding.ivUserAvatar)
+                }
             }
         }
 

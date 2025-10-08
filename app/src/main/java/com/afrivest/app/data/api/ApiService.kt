@@ -49,7 +49,7 @@ interface ApiService {
     // ==================== PROFILE ====================
 
     @GET(Constants.Endpoints.PROFILE)
-    suspend fun getProfile(): Response<ApiResponse<User>>
+    suspend fun getProfile(): Response<ApiResponse<ProfileData>>
 
     @PUT(Constants.Endpoints.PROFILE)
     suspend fun updateProfile(

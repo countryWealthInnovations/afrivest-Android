@@ -21,8 +21,3 @@ data class User(
     fun isEmailVerified(): Boolean = email_verified
     fun isKYCVerified(): Boolean = kyc_verified
 }
-
-
-
-
-

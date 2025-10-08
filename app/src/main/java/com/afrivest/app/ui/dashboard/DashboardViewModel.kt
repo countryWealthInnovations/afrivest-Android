@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.Dashboard
+import com.afrivest.app.data.model.ProfileData
 import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.Transaction
 import com.afrivest.app.data.model.User
 import com.afrivest.app.data.model.Wallet
+import com.afrivest.app.data.repository.ProfileRepository
 import com.afrivest.app.data.repository.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val walletRepository: WalletRepository
+    private val walletRepository: WalletRepository,
+    private val profileRepository: ProfileRepository,
+    private val securePreferences: SecurePreferences
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -26,8 +31,8 @@ class DashboardViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
-    private val _dashboard = MutableLiveData<Dashboard?>()
-    val dashboard: LiveData<Dashboard?> = _dashboard
+    private val _profile = MutableLiveData<ProfileData?>()
+    val profile: LiveData<ProfileData?> = _profile
 
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
@@ -53,20 +58,60 @@ class DashboardViewModel @Inject constructor(
     }
 
     /**
-     * Load dashboard data
+     * Load profile with caching
      */
     fun loadDashboard() {
+        viewModelScope.launch {
+            // Check if we have cached data
+            val hasCachedData = securePreferences.getCachedProfile() != null
+
+            // Only show loading if no cached data
+            if (!hasCachedData) {
+                _isLoading.value = true
+            }
+
+            _errorMessage.value = null
+
+            when (val result = profileRepository.getProfile()) {
+                is Resource.Success -> {
+                    _profile.value = result.data
+                    _user.value = result.data?.toUser()
+                    _wallets.value = result.data?.wallets ?: emptyList()
+                    _isLoading.value = false
+
+                    timber.log.Timber.d("✅ Profile loaded: ${result.data?.wallets?.size} wallets")
+                }
+                is Resource.Loading -> {
+                    // Handle loading state if needed
+                }
+                is Resource.Error -> {
+                    // Only show error if we don't have cached data
+                    if (!hasCachedData) {
+                        _errorMessage.value = result.message
+                        timber.log.Timber.e("❌ Profile load error: ${result.message}")
+                    }
+                    _isLoading.value = false
+                }
+            }
+        }
+    }
+
+    /**
+     * Force refresh (clears cache)
+     */
+    fun forceRefresh() {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
 
-            when (val result = walletRepository.getDashboard()) {
+            when (val result = profileRepository.forceRefreshProfile()) {
                 is Resource.Success -> {
-                    _dashboard.value = result.data
-                    _user.value = result.data?.user
+                    _profile.value = result.data
+                    _user.value = result.data?.toUser()
                     _wallets.value = result.data?.wallets ?: emptyList()
-                    _recentTransactions.value = result.data?.recentTransactions ?: emptyList()
                     _isLoading.value = false
+
+                    timber.log.Timber.d("✅ Profile force refreshed")
                 }
                 is Resource.Loading -> {
                     // Handle loading state if needed
@@ -75,27 +120,7 @@ class DashboardViewModel @Inject constructor(
                     _errorMessage.value = result.message
                     _isLoading.value = false
 
-                    // Fallback to wallets endpoint
-                    loadWalletsFallback()
-                }
-            }
-        }
-    }
-
-    /**
-     * Fallback to wallets endpoint
-     */
-    private fun loadWalletsFallback() {
-        viewModelScope.launch {
-            when (val result = walletRepository.getWallets()) {
-                is Resource.Success -> {
-                    _wallets.value = result.data ?: emptyList()
-                }
-                is Resource.Loading -> {
-                    // Handle loading state if needed
-                }
-                is Resource.Error -> {
-                    _errorMessage.value = "Failed to load data: ${result.message}"
+                    timber.log.Timber.e("❌ Profile force refresh error: ${result.message}")
                 }
             }
         }
