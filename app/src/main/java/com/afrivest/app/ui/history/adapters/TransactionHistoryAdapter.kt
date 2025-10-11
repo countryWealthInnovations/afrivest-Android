@@ -40,7 +40,7 @@ class TransactionHistoryAdapter(
             binding.tvTransactionDate.text = formatDate(transaction.created_at)
 
             // Set amount with sign
-            val sign = getAmountSign(transaction.type)
+            val sign = getAmountSign(transaction)
             val formattedAmount = String.format(
                 "%s %,.2f %s",
                 sign,
@@ -49,8 +49,8 @@ class TransactionHistoryAdapter(
             )
             binding.tvAmount.text = formattedAmount
 
-            // Set amount color based on transaction type
-            binding.tvAmount.setTextColor(getAmountColor(transaction.type))
+            // Set amount color based on transaction type and direction
+            binding.tvAmount.setTextColor(getAmountColor(transaction))
 
             // Set status
             binding.tvStatus.text = transaction.status.capitalize(Locale.ROOT)
@@ -71,26 +71,32 @@ class TransactionHistoryAdapter(
         private fun getTransactionDescription(transaction: Transaction): String {
             return when {
                 !transaction.description.isNullOrEmpty() -> transaction.description
-                transaction.type == "transfer" && transaction.recipient != null -> {
-                    "Transfer to ${transaction.recipient.name}"
+                transaction.type == "transfer" -> {
+                    when (transaction.direction) {
+                        "sent" -> "Transfer to ${transaction.other_party?.name ?: "Unknown"}"
+                        "received" -> "Transfer from ${transaction.other_party?.name ?: "Unknown"}"
+                        else -> transaction.getTypeDisplayName()
+                    }
                 }
                 else -> transaction.getTypeDisplayName()
             }
         }
 
-        private fun getAmountSign(type: String): String {
-            return when (type) {
-                "deposit" -> "+"
-                "withdrawal", "transfer", "bill_payment", "insurance", "investment",
-                "gold_purchase", "crypto_purchase" -> "-"
+        private fun getAmountSign(transaction: Transaction): String {
+            return when {
+                transaction.direction == "received" -> "+"
+                transaction.type == "deposit" -> "+"
+                transaction.type in listOf("withdrawal", "transfer", "bill_payment", "insurance",
+                    "investment", "gold_purchase", "crypto_purchase") -> "-"
                 else -> ""
             }
         }
 
-        private fun getAmountColor(type: String): Int {
-            return when (type) {
-                "deposit" -> itemView.context.getColor(R.color.success_green)
-                "withdrawal", "transfer" -> itemView.context.getColor(R.color.error_red)
+        private fun getAmountColor(transaction: Transaction): Int {
+            return when {
+                transaction.direction == "received" -> itemView.context.getColor(R.color.success_green)
+                transaction.type == "deposit" -> itemView.context.getColor(R.color.success_green)
+                transaction.type in listOf("withdrawal", "transfer") -> itemView.context.getColor(R.color.error_red)
                 else -> itemView.context.getColor(R.color.text_primary)
             }
         }

@@ -25,6 +25,8 @@ class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModels()
     private lateinit var adapter: TransactionHistoryAdapter
 
+    private var hasLoadedData = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,8 +44,11 @@ class HistoryFragment : Fragment() {
         setupObservers()
         setupSwipeRefresh()
 
-        // Load initial data
-        viewModel.loadTransactions()
+        // Load initial data only once
+        if (!hasLoadedData) {
+            viewModel.loadTransactions()
+            hasLoadedData = true
+        }
     }
 
     private fun setupRecyclerView() {

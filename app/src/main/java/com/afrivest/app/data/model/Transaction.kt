@@ -17,6 +17,8 @@ data class Transaction(
     val payment_channel: String? = null,
     val external_reference: String? = null,
     val description: String? = null,
+    val direction: String? = null, // NEW: sent, received, self, other
+    val other_party: TransactionRecipient? = null, // NEW: sender or recipient
     val user: TransactionUser? = null,
     val wallet: TransactionWallet? = null,
     val recipient: TransactionRecipient? = null,
@@ -69,5 +71,5 @@ data class TransactionWallet(
 @Parcelize
 data class TransactionRecipient(
     val name: String,
-    val email: String
+    val email: String? = null
 ) : Parcelable

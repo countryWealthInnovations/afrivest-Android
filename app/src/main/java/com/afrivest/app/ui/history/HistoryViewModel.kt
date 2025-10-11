@@ -41,6 +41,12 @@ class HistoryViewModel @Inject constructor(
      * Load transactions (initial load)
      */
     fun loadTransactions() {
+        // Prevent concurrent requests
+        if (_isLoading.value == true) {
+            Timber.d("⏸️ Already loading, skipping request")
+            return
+        }
+
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
@@ -118,7 +124,13 @@ class HistoryViewModel @Inject constructor(
      * Filter transactions by status
      */
     fun filterTransactions(status: String?) {
+        // Don't reload if filter hasn't changed or already loading
+        if (currentFilter == status || _isLoading.value == true) {
+            return
+        }
+
         currentFilter = status
+        allTransactions.clear()
         loadTransactions()
     }
 
