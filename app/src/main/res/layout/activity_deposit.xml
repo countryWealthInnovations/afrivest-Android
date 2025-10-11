@@ -31,45 +31,41 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_horizontal">
 
-            <!-- Amount Input -->
+            <!-- Network Selection -->
             <TextView
                 style="@style/TextAppearance.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Amount"
+                android:text="Select Network"
                 android:layout_marginTop="@dimen/spacing_lg" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.App.TextInputLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextAmount"
-                    style="@style/Widget.App.TextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter amount"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Currency Spinner -->
-            <TextView
-                style="@style/TextAppearance.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Currency"
-                android:layout_marginTop="@dimen/spacing_md" />
-
-            <Spinner
-                android:id="@+id/spinnerCurrency"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
+                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_input_field"
-                android:paddingStart="@dimen/spacing_md"
-                android:paddingEnd="@dimen/spacing_md" />
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMTN"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:text="MTN"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_button_primary"
+                    android:layout_marginEnd="@dimen/spacing_sm" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAirtel"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:text="Airtel"
+                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_input_field"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+            </LinearLayout>
 
             <!-- Phone Number Input -->
             <TextView
@@ -97,6 +93,37 @@
                     android:maxLength="15" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MTN: 077, 078, 076 | Airtel: 070, 074, 075"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_xs" />
+
+            <!-- Amount Input -->
+            <TextView
+                style="@style/TextAppearance.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount (UGX)"
+                android:layout_marginTop="@dimen/spacing_md" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextAmount"
+                    style="@style/Widget.App.TextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter amount (min 1,000)"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Error Message -->
             <TextView
                 android:id="@+id/textError"
@@ -107,15 +134,16 @@
                 android:textColor="@color/error_red"
                 android:visibility="gone" />
 
-            <!-- Success Message -->
+            <!-- Info Text -->
             <TextView
-                android:id="@+id/textSuccess"
-                style="@style/TextAppearance.BodyRegular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="You will receive a prompt on your phone to approve the payment"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:textColor="@color/success_green"
-                android:visibility="gone" />
+                android:padding="@dimen/spacing_sm"
+                android:background="@drawable/bg_input_field" />
 
             <View
                 android:layout_width="match_parent"
@@ -137,7 +165,8 @@
                 style="@style/Widget.App.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:text="Deposit"
+                android:text="Continue"
+                android:enabled="false"
                 android:layout_marginBottom="@dimen/spacing_lg" />
         </LinearLayout>
     </ScrollView>

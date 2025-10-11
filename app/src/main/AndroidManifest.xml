@@ -22,8 +22,8 @@
     <application
         android:name=".AfriVestApplication"
         android:allowBackup="true"
-        android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,9 +33,17 @@
         android:usesCleartextTraffic="false"
         tools:targetApi="33">
         <activity
-            android:name=".ui.onboarding.OnboardingActivity"
+            android:name=".ui.deposit.DepositProcessingActivity"
             android:exported="false" />
-        <!-- SPLASH SCREEN ACTIVITY -->
+        <activity
+            android:name=".ui.deposit.DepositStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.deposit.DepositWebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false" /> <!-- SPLASH SCREEN ACTIVITY -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -46,12 +54,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- MAIN ACTIVITY -->
+        </activity>
+        <!-- MAIN ACTIVITY -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" /> <!-- AUTH ACTIVITIES -->
+            android:windowSoftInputMode="adjustResize" />
+        <!-- AUTH ACTIVITIES -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
@@ -78,7 +88,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" /> <!-- TRANSACTION ACTIVITIES -->
         <activity
-            android:name=".ui.transaction.TransactionDetailActivity"
+            android:name=".ui.transactions.TransactionDetailActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" /> <!-- TRANSFER ACTIVITIES -->
@@ -105,7 +115,8 @@
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" /> <!-- FIREBASE MESSAGING SERVICE -->
+            android:windowSoftInputMode="adjustResize" />
+        <!-- FIREBASE MESSAGING SERVICE -->
         <service
             android:name=".services.AfriVestMessagingService"
             android:exported="false">
@@ -113,6 +124,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications" />
@@ -122,6 +134,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

@@ -72,10 +72,11 @@
 
             <TextView
                 android:id="@+id/tvAmount"
-                style="@style/TextAppearance.BodyLarge"
+                style="@style/TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+ 50,000.00 UGX"
+                android:textStyle="bold"
                 android:textColor="@color/success_green" />
 
             <TextView

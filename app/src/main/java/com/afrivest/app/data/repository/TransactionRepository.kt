@@ -17,14 +17,13 @@ import javax.inject.Inject
 class TransactionRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-
     suspend fun getTransactions(
         page: Int = 1,
         perPage: Int = 15,
         type: String? = null,
         status: String? = null,
         currency: String? = null
-    ): Resource<PaginatedResponse<Transaction>> = withContext(Dispatchers.IO) {
+    ): Resource<List<Transaction>> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.getTransactions(perPage, page, type, status, currency)
             handleResponse(response)

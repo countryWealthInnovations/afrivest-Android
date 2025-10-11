@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_gradient"
+    android:gravity="center"
+    android:padding="@dimen/screen_horizontal">
+
+    <!-- Loading State -->
+    <LinearLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:indeterminateTint="@color/primary_gold" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            style="@style/TextAppearance.H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Processing Payment..."
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/TextAppearance.BodyRegular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please approve the payment on your phone"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/spacing_xl"
+            android:padding="@dimen/spacing_md"
+            android:background="@drawable/bg_input_field">
+
+            <TextView
+                style="@style/TextAppearance.BodyRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transaction Details"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/textReference"
+                style="@style/TextAppearance.BodyLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TXN-XXX"
+                android:layout_marginTop="@dimen/spacing_xs" />
+
+            <TextView
+                android:id="@+id/textAmount"
+                style="@style/TextAppearance.H2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25,000 UGX"
+                android:textColor="@color/primary_gold"
+                android:layout_marginTop="@dimen/spacing_sm" />
+
+            <TextView
+                android:id="@+id/textNetwork"
+                style="@style/TextAppearance.BodyRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MTN Mobile Money"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_xs" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Success State -->
+    <LinearLayout
+        android:id="@+id/layoutSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_checkmark_circle"
+            android:tint="@color/success_green" />
+
+        <TextView
+            style="@style/TextAppearance.H1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit Successful!"
+            android:textColor="@color/success_green"
+            android:layout_marginTop="@dimen/spacing_lg" />
+
+        <TextView
+            style="@style/TextAppearance.BodyRegular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your wallet has been credited"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textAlignment="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDone"
+            style="@style/Widget.App.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="Done"
+            android:layout_marginTop="@dimen/spacing_xl" />
+    </LinearLayout>
+
+    <!-- Failure State -->
+    <LinearLayout
+        android:id="@+id/layoutFailure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_error_outline"
+            android:tint="@color/error_red" />
+
+        <TextView
+            style="@style/TextAppearance.H1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment Failed"
+            android:textColor="@color/error_red"
+            android:layout_marginTop="@dimen/spacing_lg" />
+
+        <TextView
+            android:id="@+id/textErrorMessage"
+            style="@style/TextAppearance.BodyRegular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transaction was not completed"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/spacing_xl">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetry"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="Try Again"
+                android:layout_marginEnd="@dimen/spacing_sm" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:backgroundTint="@color/button_disabled"
+                android:layout_marginStart="@dimen/spacing_sm" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

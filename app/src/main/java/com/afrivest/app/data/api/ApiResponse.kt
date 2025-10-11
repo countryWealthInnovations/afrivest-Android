@@ -39,17 +39,17 @@ data class AvatarResponse(
     val avatar_url: String
 )
 
-data class DepositResponse(
-    val transaction: Transaction,
-    val payment_data: PaymentData? = null,
-    val bank_details: BankDetails? = null,
-    val instructions: String? = null
-)
-
-data class PaymentData(
-    val authorization_url: String? = null,
-    val tx_ref: String? = null
-)
+//data class DepositResponse(
+//    val transaction: Transaction,
+//    val payment_data: PaymentData? = null,
+//    val bank_details: BankDetails? = null,
+//    val instructions: String? = null
+//)
+//
+//data class PaymentData(
+//    val authorization_url: String? = null,
+//    val tx_ref: String? = null
+//)
 
 data class BankDetails(
     val account_name: String,
@@ -73,14 +73,14 @@ data class RecipientInfo(
     val email: String
 )
 
-data class TransactionStatus(
-    val reference: String,
-    val status: String,
-    val amount: String,
-    val currency: String,
-    val created_at: String,
-    val completed_at: String?
-)
+//data class TransactionStatus(
+//    val reference: String,
+//    val status: String,
+//    val amount: String,
+//    val currency: String,
+//    val created_at: String,
+//    val completed_at: String?
+//)
 
 data class TransactionReceipt(
     val receipt: Receipt

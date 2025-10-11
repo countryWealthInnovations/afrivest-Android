@@ -32,6 +32,7 @@ object Constants {
         fun walletTransactions(currency: String) = "wallets/$currency/transactions"
 
         // Deposits
+        const val DEPOSITS = "/deposits"
         const val DEPOSIT_CARD = "deposits/card"
         const val DEPOSIT_MOBILE_MONEY = "deposits/mobile-money"
         const val DEPOSIT_BANK = "deposits/bank-transfer"

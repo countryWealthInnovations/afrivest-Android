@@ -1,8 +1,10 @@
 package com.afrivest.app.data.api
 
+import android.os.Parcelable
 import com.afrivest.app.data.model.*
 import com.afrivest.app.utils.Constants
 import com.afrivest.app.data.model.User
+import kotlinx.parcelize.Parcelize
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -91,25 +93,22 @@ interface ApiService {
 
     // ==================== DEPOSITS ====================
 
+
+    @POST("deposits/mobile-money")
+    suspend fun depositMobileMoney(@Body request: MobileMoneyDepositRequest): Response<ApiResponse<DepositResponse>>
+
+    @POST("deposits/bank-transfer")
+    suspend fun depositBankTransfer(@Body request: BankTransferRequest): Response<ApiResponse<DepositResponse>>
+
+    @GET("deposits/{id}/check")
+    suspend fun checkDepositStatus(@Path("id") id: String): Response<ApiResponse<TransactionStatus>>
+
+    @GET("deposits/{reference}/status")
+    suspend fun getDepositStatus(@Path("reference") reference: String): Response<ApiResponse<TransactionStatus>>
+
     @POST(Constants.Endpoints.DEPOSIT_CARD)
-    suspend fun depositCard(
-        @Body request: CardDepositRequest
-    ): Response<ApiResponse<DepositResponse>>
+    suspend fun depositCard(@Body request: CardDepositRequest): Response<ApiResponse<DepositResponse>>
 
-    @POST(Constants.Endpoints.DEPOSIT_MOBILE_MONEY)
-    suspend fun depositMobileMoney(
-        @Body request: MobileMoneyDepositRequest
-    ): Response<ApiResponse<DepositResponse>>
-
-    @POST(Constants.Endpoints.DEPOSIT_BANK)
-    suspend fun depositBank(
-        @Body request: BankDepositRequest
-    ): Response<ApiResponse<DepositResponse>>
-
-    @GET
-    suspend fun getDepositStatus(
-        @Url url: String
-    ): Response<ApiResponse<TransactionStatus>>
 
 
     // ==================== WITHDRAWALS ====================
@@ -162,12 +161,6 @@ interface ApiService {
         @Body request: CryptoPurchaseRequest
     ): Response<ApiResponse<TransferResponse>>
 
-    @GET(Constants.Endpoints.TRANSFER_HISTORY)
-    suspend fun getTransferHistory(
-        @Query("per_page") perPage: Int = 15,
-        @Query("page") page: Int = 1
-    ): Response<ApiResponse<PaginatedResponse<Transaction>>>
-
 
     // ==================== TRANSACTIONS ====================
 
@@ -178,7 +171,7 @@ interface ApiService {
         @Query("type") type: String? = null,
         @Query("status") status: String? = null,
         @Query("currency") currency: String? = null
-    ): Response<ApiResponse<PaginatedResponse<Transaction>>>
+    ): Response<ApiResponse<List<Transaction>>>
 
     @GET
     suspend fun getTransaction(
@@ -208,8 +201,6 @@ interface ApiService {
 
     @GET(Constants.Endpoints.DASHBOARD)
     suspend fun getDashboard(): Response<ApiResponse<Dashboard>>
-
-    // ==================== Flutterwave ====================
 }
 
 // ==================== REQUEST MODELS ====================
@@ -342,3 +333,49 @@ data class CryptoPurchaseRequest(
     val crypto_currency: String,
     val crypto_amount: Double
 )
+
+@Parcelize
+data class DepositResponse(
+    val transaction_id: Int,
+    val reference: String,
+    val amount: String,
+    val currency: String,
+    val status: String? = null,
+    val network: String? = null,
+    val payment_data: PaymentData
+) : Parcelable
+
+@Parcelize
+data class PaymentData(
+    val mode: String,
+    val authorization_url: String? = null,
+    val redirect_url: String? = null,
+    val flutterwave_transaction_id: String? = null
+) : Parcelable {
+    val paymentUrl: String?
+        get() = authorization_url ?: redirect_url
+}
+
+@Parcelize
+data class TransactionStatus(
+    val transaction_id: Int,
+    val reference: String,
+    val amount: String,
+    val currency: String,
+    val status: String,
+    val payment_method: String,
+    val network: String? = null,
+    val created_at: String,
+    val updated_at: String,
+    val message: String? = null,
+    val error: ErrorDetails? = null
+) : Parcelable
+
+@Parcelize
+data class ErrorDetails(
+    val error_code: String,
+    val message: String,
+    val action: String?,
+    val can_retry: Boolean,
+    val severity: String
+) : Parcelable

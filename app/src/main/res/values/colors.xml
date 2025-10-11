@@ -39,4 +39,6 @@
     <color name="gradient_end">#C58D30</color>
 
     <color name="text_input_stroke_color">#EFBF04</color>
+
+    <color name="chip_background">#2A2A2A</color>
 </resources>

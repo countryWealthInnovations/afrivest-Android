@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base Application Theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary_gold</item>
         <item name="colorPrimaryDark">@color/background_dark_1</item>
         <item name="colorAccent">@color/primary_gold</item>
