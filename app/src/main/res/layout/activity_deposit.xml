@@ -31,41 +31,51 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_horizontal">
 
-            <!-- Network Selection -->
-            <TextView
-                style="@style/TextAppearance.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Network"
-                android:layout_marginTop="@dimen/spacing_lg" />
+        <!-- Payment Method Selector -->
+        <TextView
+            style="@style/TextAppearance.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment Method"
+            android:layout_marginTop="@dimen/spacing_lg" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:gravity="center">
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/togglePaymentMethod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_sm"
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnMTN"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height"
-                    android:layout_weight="1"
-                    android:text="MTN"
-                    android:textColor="@color/text_primary"
-                    android:background="@drawable/bg_button_primary"
-                    android:layout_marginEnd="@dimen/spacing_sm" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMobileMoney"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="Mobile Money"
+                android:textColor="@color/text_primary"
+                app:strokeColor="@color/primary_gold"
+                android:checked="true" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAirtel"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height"
-                    android:layout_weight="1"
-                    android:text="Airtel"
-                    android:textColor="@color/text_primary"
-                    android:background="@drawable/bg_input_field"
-                    android:layout_marginStart="@dimen/spacing_sm" />
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCard"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="Card Deposit"
+                android:textColor="@color/text_primary"
+                app:strokeColor="@color/primary_gold" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <LinearLayout
+            android:id="@+id/layoutMobileMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <!-- Phone Number Input -->
             <TextView
@@ -75,31 +85,207 @@
                 android:text="Phone Number"
                 android:layout_marginTop="@dimen/spacing_md" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutPhone"
-                style="@style/Widget.App.TextInputLayout"
+            <!-- Phone Number Input Container -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/spacing_sm"
-                app:prefixText="+">
+                android:orientation="horizontal"
+                android:background="@color/input_background"
+                android:gravity="center_vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <!-- Uganda Flag and Code (hardcoded) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/spacing_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🇺🇬"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        style="@style/TextAppearance.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="+256"
+                        android:textColor="@color/text_primary" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="@color/border_default" />
+
+                <EditText
                     android:id="@+id/editTextPhone"
-                    style="@style/Widget.App.TextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="256700000001"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingStart="@dimen/spacing_sm"
+                    android:paddingEnd="@dimen/spacing_md"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_body_large"
                     android:inputType="phone"
-                    android:maxLength="15" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:maxLength="9"
+                    android:hint="700000001"
+                    android:textColorHint="@color/text_placeholder" />
+
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/tvPhoneHelperDeposit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MTN: 077, 078, 076 | Airtel: 070, 074, 075"
+                android:text="MTN: 77, 78, 76, 79 | Airtel: 70, 74, 75"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="@dimen/spacing_xs" />
+
+        </LinearLayout>
+
+            <!-- Card Section -->
+            <LinearLayout
+                android:id="@+id/layoutCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Card Number -->
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Card Number"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCardNumber"
+                        style="@style/Widget.App.TextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="1234 5678 9012 3456"
+                        android:inputType="number"
+                        android:maxLength="19" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Expiry and CVV Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/spacing_md">
+
+                    <!-- Expiry Month -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/spacing_sm">
+
+                        <TextView
+                            style="@style/TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expiry Month" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextExpiryMonth"
+                                style="@style/Widget.App.TextInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="MM"
+                                android:inputType="number"
+                                android:maxLength="2" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- Expiry Year -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="@dimen/spacing_sm">
+
+                        <TextView
+                            style="@style/TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expiry Year" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextExpiryYear"
+                                style="@style/Widget.App.TextInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="YY"
+                                android:inputType="number"
+                                android:maxLength="2" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- CVV -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="@dimen/spacing_sm">
+
+                        <TextView
+                            style="@style/TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CVV" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextCVV"
+                                style="@style/Widget.App.TextInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="123"
+                                android:inputType="numberPassword"
+                                android:maxLength="3" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- Amount Input -->
             <TextView
@@ -120,7 +306,7 @@
                     style="@style/Widget.App.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter amount (min 1,000)"
+                    android:hint="Enter amount (min 5,000)"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 

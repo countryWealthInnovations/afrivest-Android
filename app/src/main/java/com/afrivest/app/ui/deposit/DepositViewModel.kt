@@ -1,5 +1,6 @@
 package com.afrivest.app.ui.deposit
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,23 +67,19 @@ class DepositViewModel @Inject constructor(
     }
 
     private fun detectNetwork(phone: String) {
-        // Remove + and spaces
-        val cleanPhone = phone.replace("+", "").replace(" ", "")
-
+        // Just check the first 2 digits
         when {
-            cleanPhone.startsWith("256077") ||
-                    cleanPhone.startsWith("256078") ||
-                    cleanPhone.startsWith("256076") -> setNetwork("MTN")
+            phone.startsWith("77") || phone.startsWith("78") ||
+                    phone.startsWith("76") || phone.startsWith("79") -> setNetwork("MTN")
 
-            cleanPhone.startsWith("256070") ||
-                    cleanPhone.startsWith("256074") ||
-                    cleanPhone.startsWith("256075") -> setNetwork("AIRTEL")
+            phone.startsWith("70") || phone.startsWith("74") ||
+                    phone.startsWith("75") -> setNetwork("AIRTEL")
         }
     }
 
     private fun validateForm() {
         val phoneValid = Validators.isValidPhoneNumber(_phoneNumber.value ?: "")
-        val amountValid = (_amount.value?.toDoubleOrNull() ?: 0.0) >= 1000
+        val amountValid = (_amount.value?.toDoubleOrNull() ?: 0.0) >= 4999
         val networkValid = _selectedNetwork.value in listOf("MTN", "AIRTEL")
 
         _isFormValid.value = phoneValid && amountValid && networkValid
@@ -99,6 +96,28 @@ class DepositViewModel @Inject constructor(
                 phoneNumber = Validators.formatPhoneNumber(_phoneNumber.value ?: "")
             )
 
+            _depositResult.value = result
+        }
+    }
+
+    fun initiateCardDeposit(
+        amount: Double,
+        cardNumber: String,
+        expiryMonth: String,
+        expiryYear: String,
+        cvv: String
+    ) {
+        viewModelScope.launch {
+            _depositResult.value = Resource.Loading()
+
+            val result = depositRepository.depositCard(
+                amount = amount,
+                currency = _currency.value ?: "UGX",
+                cardNumber = cardNumber,
+                cvv = cvv,
+                expiryMonth = expiryMonth,
+                expiryYear = expiryYear
+            )
             _depositResult.value = result
         }
     }

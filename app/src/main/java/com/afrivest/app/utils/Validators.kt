@@ -33,15 +33,26 @@ object Validators {
 
     /**
      * Formats phone number for display
-     * Adds country code prefix if not present
+     * Adds +256 country code prefix for Uganda numbers
      */
     fun formatPhoneNumber(phone: String): String {
         val cleanPhone = phone.replace(Regex("[\\s\\-\\(\\)\\+]"), "")
 
+        // If already has 256 country code
+        if (cleanPhone.startsWith("256")) {
+            return "+$cleanPhone"
+        }
+
+        // If it's a 9-digit Uganda number (7xxxxxxxx), add +256
+        if (cleanPhone.length == 9 && cleanPhone.startsWith("7")) {
+            return "+256$cleanPhone"
+        }
+
+        // Default: add + if not present
         return if (cleanPhone.startsWith("+")) {
             cleanPhone
         } else {
-            "+$cleanPhone"
+            "+256$cleanPhone"
         }
     }
 

@@ -257,8 +257,7 @@ data class CardDepositRequest(
     val card_number: String,
     val cvv: String,
     val expiry_month: String,
-    val expiry_year: String,
-    val email: String
+    val expiry_year: String
 )
 
 data class MobileMoneyDepositRequest(
@@ -348,12 +347,13 @@ data class DepositResponse(
 @Parcelize
 data class PaymentData(
     val mode: String,
+    val url: String? = null,
     val authorization_url: String? = null,
     val redirect_url: String? = null,
     val flutterwave_transaction_id: String? = null
 ) : Parcelable {
     val paymentUrl: String?
-        get() = authorization_url ?: redirect_url
+        get() = url ?: authorization_url ?: redirect_url
 }
 
 @Parcelize

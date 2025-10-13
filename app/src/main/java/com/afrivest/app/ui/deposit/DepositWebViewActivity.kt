@@ -54,11 +54,18 @@ class DepositWebViewActivity : AppCompatActivity() {
             settings.useWideViewPort = true
 
             webViewClient = object : WebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+                    binding.progressBar.visibility = View.VISIBLE
+                    android.util.Log.d("WebViewDebug", "Page started loading: $url")
+                }
+
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?
                 ): Boolean {
                     val url = request?.url.toString()
+                    android.util.Log.d("WebViewDebug", "Navigating to: $url")
 
                     // Check if this is the return URL
                     if (url.contains("/api/deposits/return")) {
@@ -73,6 +80,16 @@ class DepositWebViewActivity : AppCompatActivity() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     binding.progressBar.visibility = View.GONE
+                    android.util.Log.d("WebViewDebug", "Page finished loading: $url")
+                }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: android.webkit.WebResourceError?
+                ) {
+                    super.onReceivedError(view, request, error)
+                    android.util.Log.e("WebViewDebug", "Error loading page: ${error?.description}")
                 }
             }
 
