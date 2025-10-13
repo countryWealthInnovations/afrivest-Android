@@ -2,6 +2,7 @@ package com.afrivest.app.ui.transfer
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
@@ -40,6 +41,32 @@ class WithdrawActivity : AppCompatActivity() {
                 binding.btnWithdraw.enable()
             } else {
                 binding.btnWithdraw.disable()
+            }
+        }
+
+        // Observe fee changes
+        viewModel.totalAmount.observe(this) { total ->
+            if (total > 0) {
+                binding.feeSection.visibility = View.VISIBLE
+
+                // Show current amount
+                val currentAmount = viewModel.amount.value?.toDoubleOrNull() ?: 0.0
+                binding.tvWithdrawAmount.text = "UGX ${FeeCalculator.formatCurrency(currentAmount)}"
+
+                binding.tvFeeAmount.text = "UGX ${FeeCalculator.formatCurrency(viewModel.fee.value ?: 0.0)}"
+                binding.tvTotalAmount.text = "UGX ${FeeCalculator.formatCurrency(total)}"
+
+                val balanceAfter = viewModel.balanceAfterWithdrawal.value ?: 0.0
+                binding.tvBalanceAfter.text = "UGX ${FeeCalculator.formatCurrency(balanceAfter)}"
+
+                // Change color based on insufficient funds
+                if (viewModel.insufficientFundsWarning.value == true) {
+                    binding.tvBalanceAfter.setTextColor(getColor(R.color.error_red))
+                } else {
+                    binding.tvBalanceAfter.setTextColor(getColor(R.color.success_green))
+                }
+            } else {
+                binding.feeSection.visibility = View.GONE
             }
         }
 

@@ -1,20 +1,25 @@
 package com.afrivest.app.ui.transfer
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.WithdrawResponse
 import com.afrivest.app.data.repository.WithdrawRepository
+import com.afrivest.app.utils.FeeCalculator
 import com.afrivest.app.utils.Validators
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WithdrawViewModel @Inject constructor(
-    private val withdrawRepository: WithdrawRepository
+    private val withdrawRepository: WithdrawRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _withdrawResult = MutableLiveData<Resource<WithdrawResponse>>()
@@ -35,6 +40,21 @@ class WithdrawViewModel @Inject constructor(
     private val _isFormValid = MutableLiveData<Boolean>(false)
     val isFormValid: LiveData<Boolean> = _isFormValid
 
+    private val _fee = MutableLiveData<Double>(0.0)
+    val fee: LiveData<Double> = _fee
+
+    private val _totalAmount = MutableLiveData<Double>(0.0)
+    val totalAmount: LiveData<Double> = _totalAmount
+
+    private val _balanceAfterWithdrawal = MutableLiveData<Double>(0.0)
+    val balanceAfterWithdrawal: LiveData<Double> = _balanceAfterWithdrawal
+
+    private val _userBalance = MutableLiveData<Double>(0.0)
+    val userBalance: LiveData<Double> = _userBalance
+
+    private val _insufficientFundsWarning = MutableLiveData<Boolean>(false)
+    val insufficientFundsWarning: LiveData<Boolean> = _insufficientFundsWarning
+
     fun setPhoneNumber(phone: String) {
         _phoneNumber.value = phone
         validateForm()
@@ -48,6 +68,17 @@ class WithdrawViewModel @Inject constructor(
     fun setAmount(amt: String) {
         _amount.value = amt
         validateForm()
+
+        // Calculate fee
+        amt.toDoubleOrNull()?.let { amountValue ->
+            if (amountValue >= 10000) {
+                calculateAndUpdateFee(amountValue)
+            } else {
+                _fee.value = 0.0
+                _totalAmount.value = 0.0
+                _insufficientFundsWarning.value = false
+            }
+        }
     }
 
     private fun detectNetwork(phone: String) {
@@ -64,8 +95,32 @@ class WithdrawViewModel @Inject constructor(
     private fun validateForm() {
         val phoneValid = _phoneNumber.value?.length == 9 && _phoneNumber.value?.startsWith("7") == true
         val amountValid = (_amount.value?.toDoubleOrNull() ?: 0.0) >= 10000
+        val sufficientFunds = _insufficientFundsWarning.value != true
 
-        _isFormValid.value = phoneValid && amountValid
+        _isFormValid.value = phoneValid && amountValid && sufficientFunds
+    }
+
+    private fun calculateAndUpdateFee(amount: Double) {
+        val calculatedFee = FeeCalculator.calculateFee(amount)
+        val total = amount + calculatedFee
+
+        _fee.value = calculatedFee
+        _totalAmount.value = total
+
+        // Get user's UGX balance from cached profile
+        val profile = SecurePreferences(context).getCachedProfile()
+        profile?.let { profileData ->
+            val ugxWallet = profileData.wallets.firstOrNull { it.currency == "UGX" }
+            ugxWallet?.let { wallet ->
+                val balance = wallet.balance.toDoubleOrNull() ?: 0.0
+                _userBalance.value = balance
+                _balanceAfterWithdrawal.value = balance - total
+                _insufficientFundsWarning.value = total > balance
+
+                // Re-validate form after checking balance
+                validateForm()
+            }
+        }
     }
 
     fun initiateWithdraw() {

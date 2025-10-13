@@ -137,7 +137,7 @@ class SendMoneyViewModel @Inject constructor(
 
     private fun validateForm() {
         val amountValue = _amount.value?.toDoubleOrNull() ?: 0.0
-        _isFormValid.value = _selectedContact.value != null && amountValue >= 10000
+        _isFormValid.value = _selectedContact.value != null && amountValue >= 5000
     }
 
     fun initiateTransfer() {

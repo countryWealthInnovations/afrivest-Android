@@ -200,7 +200,7 @@
                         style="@style/Widget.App.TextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Enter amount (min 10,000)"
+                        android:hint="Enter amount (min 5,000)"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <!-- Description -->
