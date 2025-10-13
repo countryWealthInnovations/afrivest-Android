@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.1"
-        android:scaleType="centerCrop"
-        android:src="@drawable/financial_pattern"
+        android:scaleType="fitXY"
+        android:src="@drawable/background"
         android:contentDescription="@string/financial_pattern" />
 
     <!-- Glassmorphism Blur Overlay -->
