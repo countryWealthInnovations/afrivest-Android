@@ -11,9 +11,9 @@ import com.afrivest.app.databinding.ItemTransactionBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TransactionHistoryAdapter(
+class HistoryAdapter(
     private val onItemClick: (Transaction) -> Unit
-) : ListAdapter<Transaction, TransactionHistoryAdapter.TransactionViewHolder>(TransactionDiffCallback()) {
+) : ListAdapter<Transaction, HistoryAdapter.TransactionViewHolder>(TransactionDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val binding = ItemTransactionBinding.inflate(
@@ -104,7 +104,7 @@ class TransactionHistoryAdapter(
         private fun setTransactionIcon(transaction: Transaction) {
             val iconRes = when (transaction.type) {
                 "deposit" -> R.drawable.ic_arrow_down
-                "withdrawal" -> R.drawable.ic_chevron_up
+                "withdrawal" -> R.drawable.ic_arrow_up
                 "transfer" -> R.drawable.ic_arrow_right
                 "bill_payment" -> R.drawable.ic_receipt
                 "insurance" -> R.drawable.ic_insurance

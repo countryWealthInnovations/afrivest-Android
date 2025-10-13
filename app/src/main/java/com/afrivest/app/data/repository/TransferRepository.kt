@@ -1,48 +1,69 @@
 package com.afrivest.app.data.repository
 
-import com.afrivest.app.data.api.*
-import com.afrivest.app.data.local.SecurePreferences
-import com.afrivest.app.data.model.ApiError
-import com.afrivest.app.data.model.Resource
-import com.afrivest.app.data.model.User
-import com.afrivest.app.utils.Constants
-import com.google.gson.Gson
+import com.afrivest.app.data.api.ApiService
+import com.afrivest.app.data.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TransferRepository @Inject constructor(
     private val apiService: ApiService
 ) {
 
-    suspend fun p2pTransfer(
-        recipientEmail: String,
+    suspend fun transferP2P(
+        recipientId: Int,
         amount: Double,
         currency: String,
-        description: String? = null
-    ): Resource<TransferResponse> = withContext(Dispatchers.IO) {
-        try {
-            val request = P2PTransferRequest(recipientEmail, amount, currency, description)
-            val response = apiService.p2pTransfer(request)
-            handleResponse(response)
-        } catch (e: Exception) {
-            Timber.e(e, "P2P transfer error")
-            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        description: String?
+    ): Resource<P2PTransferResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val request = P2PTransferRequest(
+                    recipient_id = recipientId,
+                    amount = amount,
+                    currency = currency,
+                    description = description
+                )
+
+                val response = apiService.transferP2P(request)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val apiResponse = response.body()!!
+                    if (apiResponse.success) {
+                        Resource.Success(apiResponse.data)
+                    } else {
+                        Resource.Error(apiResponse.message ?: "Transfer failed")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Resource.Error(errorBody ?: "Unknown error occurred")
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Network error occurred")
+            }
         }
     }
 
-    private fun <T> handleResponse(response: Response<ApiResponse<T>>): Resource<T> {
-        return if (response.isSuccessful) {
-            val body = response.body()
-            if (body?.success == true) {
-                Resource.Success(body.data)
-            } else {
-                Resource.Error(body?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+    suspend fun searchUser(query: String): Resource<UserSearchResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.searchUser(query)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val apiResponse = response.body()!!
+                    if (apiResponse.success) {
+                        Resource.Success(apiResponse.data)
+                    } else {
+                        Resource.Error(apiResponse.message ?: "User not found")
+                    }
+                } else {
+                    Resource.Error("User not found")
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Network error occurred")
             }
-        } else {
-            Resource.Error(response.message() ?: Constants.ErrorMessages.UNKNOWN_ERROR)
         }
     }
 }

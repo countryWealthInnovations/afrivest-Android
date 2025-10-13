@@ -53,16 +53,16 @@
 
     <!-- Receive Money FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabReceiveMoney"
+        android:id="@+id/fabWithdraw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/spacing_md"
-        android:layout_marginBottom="250dp"
-        android:text="Receive Money"
-        android:textColor="@color/button_primary_text"
-        app:icon="@drawable/ic_qr_code"
-        app:iconTint="@color/button_primary_text"
+        android:layout_marginBottom="240dp"
+        android:text="Withdraw"
+        android:textColor="@android:color/black"
+        app:icon="@drawable/ic_arrow_down"
+        app:iconTint="@android:color/black"
         app:backgroundTint="@color/primary_gold"
         app:elevation="4dp"
         android:visibility="gone" />

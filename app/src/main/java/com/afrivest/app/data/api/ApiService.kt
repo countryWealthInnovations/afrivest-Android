@@ -109,59 +109,6 @@ interface ApiService {
     @POST(Constants.Endpoints.DEPOSIT_CARD)
     suspend fun depositCard(@Body request: CardDepositRequest): Response<ApiResponse<DepositResponse>>
 
-
-
-    // ==================== WITHDRAWALS ====================
-
-    @POST(Constants.Endpoints.WITHDRAW_BANK)
-    suspend fun withdrawBank(
-        @Body request: BankWithdrawalRequest
-    ): Response<ApiResponse<WithdrawalResponse>>
-
-    @POST(Constants.Endpoints.WITHDRAW_MOBILE_MONEY)
-    suspend fun withdrawMobileMoney(
-        @Body request: MobileMoneyWithdrawalRequest
-    ): Response<ApiResponse<WithdrawalResponse>>
-
-    @GET
-    suspend fun getWithdrawalStatus(
-        @Url url: String
-    ): Response<ApiResponse<TransactionStatus>>
-
-
-    // ==================== TRANSFERS ====================
-
-    @POST(Constants.Endpoints.P2P_TRANSFER)
-    suspend fun p2pTransfer(
-        @Body request: P2PTransferRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-    @POST(Constants.Endpoints.INSURANCE)
-    suspend fun insurancePurchase(
-        @Body request: InsuranceRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-    @POST(Constants.Endpoints.INVESTMENT)
-    suspend fun investment(
-        @Body request: InvestmentRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-    @POST(Constants.Endpoints.BILL_PAYMENT)
-    suspend fun billPayment(
-        @Body request: BillPaymentRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-    @POST(Constants.Endpoints.GOLD)
-    suspend fun goldPurchase(
-        @Body request: GoldPurchaseRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-    @POST(Constants.Endpoints.CRYPTO)
-    suspend fun cryptoPurchase(
-        @Body request: CryptoPurchaseRequest
-    ): Response<ApiResponse<TransferResponse>>
-
-
     // ==================== TRANSACTIONS ====================
 
     @GET(Constants.Endpoints.TRANSACTIONS)
@@ -201,6 +148,25 @@ interface ApiService {
 
     @GET(Constants.Endpoints.DASHBOARD)
     suspend fun getDashboard(): Response<ApiResponse<Dashboard>>
+
+    // ==================== TRANSFERS ====================
+
+    @POST(Constants.Endpoints.P2P_TRANSFER)
+    suspend fun transferP2P(
+        @Body request: P2PTransferRequest
+    ): Response<ApiResponse<P2PTransferResponse>>
+
+    @GET("users/search")
+    suspend fun searchUser(
+        @Query("query") query: String
+    ): Response<ApiResponse<UserSearchResponse>>
+
+    // ==================== WITHDRAWALS ====================
+
+    @POST(Constants.Endpoints.WITHDRAW_MOBILE_MONEY)
+    suspend fun withdrawMobileMoney(
+        @Body request: WithdrawRequest
+    ): Response<ApiResponse<WithdrawResponse>>
 }
 
 // ==================== REQUEST MODELS ====================
@@ -288,49 +254,6 @@ data class MobileMoneyWithdrawalRequest(
     val withdrawal_method: String = "mobile_money",
     val withdrawal_provider: String,
     val phone_number: String
-)
-
-data class P2PTransferRequest(
-    val recipient_email: String,
-    val amount: Double,
-    val currency: String,
-    val description: String? = null
-)
-
-data class InsuranceRequest(
-    val amount: Double,
-    val currency: String,
-    val policy_type: String,
-    val coverage_details: Map<String, Any>? = null
-)
-
-data class InvestmentRequest(
-    val amount: Double,
-    val currency: String,
-    val investment_type: String,
-    val investment_name: String
-)
-
-data class BillPaymentRequest(
-    val amount: Double,
-    val currency: String,
-    val bill_type: String,
-    val provider: String,
-    val account_number: String
-)
-
-data class GoldPurchaseRequest(
-    val amount: Double,
-    val currency: String,
-    val quantity_grams: Double,
-    val delivery_method: String
-)
-
-data class CryptoPurchaseRequest(
-    val amount: Double,
-    val currency: String,
-    val crypto_currency: String,
-    val crypto_amount: Double
 )
 
 @Parcelize

@@ -1,5 +1,6 @@
 package com.afrivest.app.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,6 +10,8 @@ import com.afrivest.app.ui.dashboard.DashboardFragment
 import com.afrivest.app.ui.assets.AssetsFragment
 import com.afrivest.app.ui.history.HistoryFragment
 import com.afrivest.app.ui.profile.ProfileFragment
+import com.afrivest.app.ui.transfer.SendMoneyActivity
+import com.afrivest.app.ui.transfer.WithdrawActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFAB() {
+        // Main FAB click listener (MISSING!)
         binding.fab.setOnClickListener {
             if (isFabExpanded) {
                 collapseFAB()
@@ -81,22 +85,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabSendMoney.setOnClickListener {
-            // TODO: Navigate to send money
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Send Money")
-                .setMessage("Send money feature coming soon")
-                .setPositiveButton("OK", null)
-                .show()
+            startActivity(Intent(this, SendMoneyActivity::class.java))
             collapseFAB()
         }
 
-        binding.fabReceiveMoney.setOnClickListener {
-            // TODO: Navigate to receive money
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Receive Money")
-                .setMessage("Receive money feature coming soon")
-                .setPositiveButton("OK", null)
-                .show()
+        binding.fabWithdraw.setOnClickListener {
+            startActivity(Intent(this, WithdrawActivity::class.java))
             collapseFAB()
         }
 
@@ -109,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         isFabExpanded = true
         binding.fabOverlay.visibility = android.view.View.VISIBLE
         binding.fabSendMoney.show()
-        binding.fabReceiveMoney.show()
+        binding.fabWithdraw.show()
         binding.fab.setImageResource(R.drawable.ic_close)
     }
 
@@ -117,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         isFabExpanded = false
         binding.fabOverlay.visibility = android.view.View.GONE
         binding.fabSendMoney.hide()
-        binding.fabReceiveMoney.hide()
+        binding.fabWithdraw.hide()
         binding.fab.setImageResource(R.drawable.ic_add)
     }
 

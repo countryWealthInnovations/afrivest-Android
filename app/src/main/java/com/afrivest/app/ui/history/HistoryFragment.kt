@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrivest.app.databinding.FragmentHistoryBinding
-import com.afrivest.app.ui.history.adapters.TransactionHistoryAdapter
+import com.afrivest.app.ui.history.adapters.HistoryAdapter
 import com.afrivest.app.ui.transactions.TransactionDetailActivity
 import com.afrivest.app.utils.gone
 import com.afrivest.app.utils.visible
@@ -23,7 +23,7 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HistoryViewModel by viewModels()
-    private lateinit var adapter: TransactionHistoryAdapter
+    private lateinit var adapter: HistoryAdapter
 
     private var hasLoadedData = false
 
@@ -52,7 +52,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = TransactionHistoryAdapter { transaction ->
+        adapter = HistoryAdapter { transaction ->
             // Navigate to transaction detail
             val intent = Intent(requireContext(), TransactionDetailActivity::class.java).apply {
                 putExtra("transaction", transaction)

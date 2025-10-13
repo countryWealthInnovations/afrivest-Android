@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- CAMERA FEATURE -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -33,17 +34,36 @@
         android:usesCleartextTraffic="false"
         tools:targetApi="33">
         <activity
+            android:name=".ui.transfer.WithdrawSuccessActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".ui.transfer.SendMoneyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".ui.deposit.DepositProcessingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.deposit.DepositStatusActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.deposit.DepositWebViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
-            android:exported="false" /> <!-- SPLASH SCREEN ACTIVITY -->
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <!-- SPLASH SCREEN ACTIVITY -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -54,14 +74,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- MAIN ACTIVITY -->
+        </activity> <!-- MAIN ACTIVITY -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <!-- AUTH ACTIVITIES -->
+            android:windowSoftInputMode="adjustResize" /> <!-- AUTH ACTIVITIES -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
@@ -100,18 +118,6 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.transfer.WithdrawActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.transfer.P2PTransferActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.transfer.BillPaymentActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"
