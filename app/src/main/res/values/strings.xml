@@ -4,7 +4,7 @@
 
     <!-- Splash Screen -->
     <string name="copyright_afrivest">© AfriVest</string>
-    <string name="money_bag_icon">Money bag icon</string>
+    <string name="logo">Logo</string>
     <string name="financial_pattern">Financial pattern background</string>
 
     <!-- Onboarding -->
