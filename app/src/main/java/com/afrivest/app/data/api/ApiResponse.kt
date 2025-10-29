@@ -39,18 +39,6 @@ data class AvatarResponse(
     val avatar_url: String
 )
 
-//data class DepositResponse(
-//    val transaction: Transaction,
-//    val payment_data: PaymentData? = null,
-//    val bank_details: BankDetails? = null,
-//    val instructions: String? = null
-//)
-//
-//data class PaymentData(
-//    val authorization_url: String? = null,
-//    val tx_ref: String? = null
-//)
-
 data class BankDetails(
     val account_name: String,
     val account_number: String,

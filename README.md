@@ -6,7 +6,7 @@ Investment-First Remittance Platform for the Ugandan Diaspora
 
 AfriVest is a fintech remittance platform that transforms money transfers into investment opportunities. The platform integrates real estate, insurance, gold, and crypto investments alongside traditional remittance services, targeting Ugandan diaspora communities in the US, UK, UAE, EU, and Canada.
 
-**Backend API:** `https://afrivest.countrywealth.ug/api/`  
+**Backend API:** `https://afrivest.co/api/`  
 **Status:** Foundation Complete - Ready for UI Development  
 **Date:** January 2025
 
@@ -367,7 +367,7 @@ Building financial inclusion solutions for Africa
 
 For technical support or bug reports:
 - Email: support@countrywealth.ug
-- Website: https://afrivest.countrywealth.ug
+- Website: https://afrivest.co
 
 ---
 

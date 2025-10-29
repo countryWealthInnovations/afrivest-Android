@@ -21,7 +21,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "\"https://afrivest.countrywealth.ug/api/\"")
+        buildConfigField("String", "BASE_URL", "\"https://afrivest.co/api/\"")
         buildConfigField("String", "API_VERSION", "\"1.0.0\"")
     }
 

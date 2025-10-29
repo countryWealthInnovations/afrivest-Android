@@ -32,7 +32,7 @@ data class ProfileData(
 
     fun isDefaultAvatar(): Boolean {
         return avatarUrl.isNullOrEmpty() ||
-                avatarUrl == "https://afrivest.countrywealth.ug/images/default-avatar.png"
+                avatarUrl == "https://afrivest.co/images/default-avatar.png"
     }
 
     fun getUserInitials(): String {

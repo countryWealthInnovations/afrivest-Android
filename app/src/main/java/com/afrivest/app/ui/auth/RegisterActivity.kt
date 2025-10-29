@@ -90,7 +90,7 @@ class RegisterActivity : AppCompatActivity() {
             val termsClick = object : android.text.style.ClickableSpan() {
                 override fun onClick(widget: android.view.View) {
                     val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-                    intent.data = android.net.Uri.parse("https://afrivest.countrywealth.ug/terms")
+                    intent.data = android.net.Uri.parse("https://afrivest.co/terms")
                     startActivity(intent)
                 }
                 override fun updateDrawState(ds: android.text.TextPaint) {
@@ -103,7 +103,7 @@ class RegisterActivity : AppCompatActivity() {
             val privacyClick = object : android.text.style.ClickableSpan() {
                 override fun onClick(widget: android.view.View) {
                     val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-                    intent.data = android.net.Uri.parse("https://afrivest.countrywealth.ug/privacy")
+                    intent.data = android.net.Uri.parse("https://afrivest.co/privacy")
                     startActivity(intent)
                 }
                 override fun updateDrawState(ds: android.text.TextPaint) {

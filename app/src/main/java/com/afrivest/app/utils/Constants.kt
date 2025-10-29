@@ -3,7 +3,7 @@ package com.afrivest.app.utils
 object Constants {
 
     // API Configuration
-    const val BASE_URL = "https://afrivest.countrywealth.ug/api/"
+    const val BASE_URL = "https://afrivest.co/api/"
     const val TIMEOUT_CONNECT = 30L // seconds
     const val TIMEOUT_READ = 30L // seconds
     const val TIMEOUT_WRITE = 30L // seconds
