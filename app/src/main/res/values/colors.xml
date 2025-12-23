@@ -41,4 +41,5 @@
     <color name="text_input_stroke_color">#EFBF04</color>
 
     <color name="chip_background">#2A2A2A</color>
+    <color name="background_dark1">#1E1E1E</color>
 </resources>

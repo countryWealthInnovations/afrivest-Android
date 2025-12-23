@@ -25,6 +25,11 @@ import timber.log.Timber
 import com.afrivest.app.R
 import com.afrivest.app.data.model.Wallet
 import com.afrivest.app.ui.deposit.DepositActivity
+import com.afrivest.app.ui.insurance.InsuranceListActivity
+import com.afrivest.app.ui.investments.InvestmentCategoriesActivity
+import com.afrivest.app.ui.investments.InvestmentProductsActivity
+import com.afrivest.app.ui.marketplace.GoldMarketplaceActivity
+import com.afrivest.app.ui.marketplace.MarketplaceActivity
 import com.google.android.material.button.MaterialButton
 
 
@@ -491,8 +496,12 @@ class DashboardFragment : Fragment() {
         )
 
         val adapter = QuickActionsAdapter(actions) { action ->
-            Timber.d("Quick Action clicked: ${action.title}")
-            Toast.makeText(requireContext(), "${action.title} - Coming Soon", Toast.LENGTH_SHORT).show()
+            when (action.key) {
+                "invest" -> startActivity(Intent(requireContext(), InvestmentProductsActivity::class.java))
+                "insurance" -> startActivity(Intent(requireContext(), InsuranceListActivity::class.java))
+                "marketplace" -> startActivity(Intent(requireContext(), GoldMarketplaceActivity::class.java))
+                "crypto" -> Toast.makeText(requireContext(), "Crypto - Coming Soon", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.rvQuickActions.apply {

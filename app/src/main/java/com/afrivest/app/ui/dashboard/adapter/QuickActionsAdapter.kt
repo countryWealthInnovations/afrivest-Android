@@ -11,7 +11,7 @@ import com.afrivest.app.R
 data class QuickAction(
     val icon: Int,
     val title: String,
-    val action: String
+    val key: String
 )
 
 class QuickActionsAdapter(

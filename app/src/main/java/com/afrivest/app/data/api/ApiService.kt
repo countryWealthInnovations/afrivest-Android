@@ -149,6 +149,78 @@ interface ApiService {
     @GET(Constants.Endpoints.DASHBOARD)
     suspend fun getDashboard(): Response<ApiResponse<Dashboard>>
 
+    // ==================== INVESTMENTS ====================
+
+    @GET("investment-categories")
+    suspend fun getInvestmentCategories(): Response<ApiResponse<List<InvestmentCategory>>>
+
+    @GET("investment-categories/{slug}")
+    suspend fun getInvestmentCategory(
+        @Path("slug") slug: String
+    ): Response<ApiResponse<InvestmentCategory>>
+
+    @GET("investment-products")
+    suspend fun getInvestmentProducts(
+        @Query("category_slug") categorySlug: String? = null,
+        @Query("risk_level") riskLevel: String? = null,
+        @Query("sort_by") sortBy: String? = null,
+        @Query("per_page") perPage: Int = 20
+    ): Response<ApiResponse<List<InvestmentProduct>>>
+
+    @GET("investment-products/featured")
+    suspend fun getFeaturedInvestmentProducts(): Response<ApiResponse<List<InvestmentProduct>>>
+
+    @GET("investment-products/{slug}")
+    suspend fun getInvestmentProduct(
+        @Path("slug") slug: String
+    ): Response<ApiResponse<InvestmentProduct>>
+
+    @POST("investments")
+    suspend fun purchaseInvestment(
+        @Body request: PurchaseInvestmentRequest
+    ): Response<ApiResponse<UserInvestment>>
+
+    @GET("investments")
+    suspend fun getUserInvestments(
+        @Query("status") status: String? = null
+    ): Response<ApiResponse<List<UserInvestment>>>
+
+    @GET("investments/{id}")
+    suspend fun getUserInvestment(
+        @Path("id") id: Int
+    ): Response<ApiResponse<UserInvestment>>
+
+    // ==================== INSURANCE ====================
+
+    @GET("insurance-policies/providers")
+    suspend fun getInsuranceProviders(): Response<ApiResponse<List<InsuranceProvider>>>
+
+    @POST("insurance-policies")
+    suspend fun purchaseInsurancePolicy(
+        @Body request: PurchaseInsurancePolicyRequest
+    ): Response<ApiResponse<InsurancePolicy>>
+
+    @GET("insurance-policies")
+    suspend fun getInsurancePolicies(
+        @Query("status") status: String? = null,
+        @Query("policy_type") policyType: String? = null
+    ): Response<ApiResponse<List<InsurancePolicy>>>
+
+    @GET("insurance-policies/{id}")
+    suspend fun getInsurancePolicy(
+        @Path("id") id: Int
+    ): Response<ApiResponse<InsurancePolicy>>
+
+    // ==================== GOLD MARKETPLACE ====================
+
+    @GET("investment-products")
+    suspend fun getGoldProducts(
+        @Query("category_slug") categorySlug: String = "gold"
+    ): Response<ApiResponse<List<InvestmentProduct>>>
+
+    @GET("gold/current-price")
+    suspend fun getCurrentGoldPrice(): Response<ApiResponse<GoldPrice>>
+
     // ==================== TRANSFERS ====================
 
     @POST(Constants.Endpoints.P2P_TRANSFER)
@@ -294,6 +366,126 @@ data class TransactionStatus(
     val error: ErrorDetails? = null
 ) : Parcelable
 
+// ==================== INVESTMENT MODELS ====================
+
+data class InvestmentCategory(
+    val name: String,
+    val slug: String,
+    val icon: String?
+)
+
+data class InvestmentProduct(
+    val id: Int,
+    val title: String,
+    val slug: String,
+    val short_description: String?,
+    val featured_image: String?,
+    val price: String,
+    val currency: String,
+    val min_investment: String,
+    val min_investment_formatted: String,
+    val expected_returns: String,
+    val risk_level: String,
+    val risk_level_label: String,
+    val duration_label: String,
+    val availability_status: String,
+    val is_featured: Boolean,
+    val rating_average: String,
+    val rating_count: Int,
+    val category: InvestmentCategory?,
+    val partner: InvestmentPartner?
+) {
+    // Compatibility properties
+    val name: String get() = title
+    val description: String? get() = short_description
+    val image_url: String? get() = featured_image
+    val minimum_investment: String get() = min_investment_formatted
+}
+
+data class InvestmentPartner(
+    val name: String,
+    val logo: String?
+) {
+    val id: Int? = null // For compatibility with filter logic
+}
+
+data class PurchaseInvestmentRequest(
+    val product_id: Int,
+    val amount: Double,
+    val currency: String,
+    val payout_frequency: String?,
+    val auto_reinvest: Boolean?
+)
+
+data class UserInvestment(
+    val id: Int,
+    val user_id: Int,
+    val product_id: Int,
+    val product: InvestmentProduct?,
+    val amount: String,
+    val currency: String,
+    val status: String,
+    val purchase_date: String,
+    val maturity_date: String?,
+    val current_value: String,
+    val returns_earned: String,
+    val payout_frequency: String?,
+    val auto_reinvest: Boolean,
+    val created_at: String
+)
+
+// ==================== INSURANCE MODELS ====================
+
+data class InsuranceProvider(
+    val id: Int,
+    val name: String,
+    val logo_url: String?,
+    val description: String?
+)
+
+data class PurchaseInsurancePolicyRequest(
+    val partner_id: Int,
+    val policy_type: String,
+    val coverage_amount: Double,
+    val premium_amount: Double,
+    val premium_frequency: String,
+    val beneficiaries: List<Beneficiary>,
+    val start_date: String,
+    val end_date: String,
+    val auto_deduct_wallet: Boolean?,
+    val wallet_id: Int?
+)
+
+data class Beneficiary(
+    val name: String,
+    val relationship: String,
+    val percentage: Int
+)
+
+data class InsurancePolicy(
+    val id: Int,
+    val user_id: Int,
+    val partner_id: Int,
+    val partner: InsuranceProvider?,
+    val policy_number: String,
+    val policy_type: String,
+    val coverage_amount: String,
+    val premium_amount: String,
+    val premium_frequency: String,
+    val status: String,
+    val start_date: String,
+    val end_date: String,
+    val beneficiaries: List<Beneficiary>,
+    val created_at: String
+)
+
+// ==================== GOLD MODELS ====================
+
+data class GoldPrice(
+    val price_per_gram_usd: Double,
+    val price_per_gram_ugx: Double,
+    val last_updated: String
+)
 @Parcelize
 data class ErrorDetails(
     val error_code: String,
