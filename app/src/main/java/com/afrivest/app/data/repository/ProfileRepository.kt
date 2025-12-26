@@ -2,9 +2,12 @@ package com.afrivest.app.data.repository
 
 import com.afrivest.app.data.api.ApiResponse
 import com.afrivest.app.data.api.ApiService
+import com.afrivest.app.data.api.UpdatePasswordRequest
 import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.ProfileData
 import com.afrivest.app.data.model.Resource
+import com.afrivest.app.utils.Constants
+import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -107,6 +110,40 @@ class ProfileRepository @Inject constructor(
         } catch (e: Exception) {
             Timber.e(e, "❌ Profile force refresh exception")
             Resource.Error(e.message ?: "Unknown error occurred")
+        }
+    }
+
+    suspend fun updatePassword(
+        currentPassword: String,
+        newPassword: String,
+        newPasswordConfirmation: String
+    ): Resource<Unit> {
+        return try {
+            val response = apiService.updatePassword(
+                UpdatePasswordRequest(
+                    current_password = currentPassword,
+                    new_password = newPassword,
+                    new_password_confirmation = newPasswordConfirmation
+                )
+            )
+
+            handleResponse(response)
+        } catch (e: Exception) {
+            Timber.e(e, "Update password failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
+    private fun <T> handleResponse(response: Response<ApiResponse<T>>): Resource<T> {
+        return if (response.isSuccessful) {
+            val body = response.body()
+            if (body?.success == true) {
+                Resource.Success(body.data)
+            } else {
+                Resource.Error(body?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+            }
+        } else {
+            Resource.Error(response.message() ?: Constants.ErrorMessages.UNKNOWN_ERROR)
         }
     }
 }

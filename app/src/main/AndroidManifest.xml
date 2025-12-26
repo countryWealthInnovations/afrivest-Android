@@ -35,6 +35,19 @@
         android:usesCleartextTraffic="false"
         tools:targetApi="33">
         <activity
+            android:name=".ui.profile.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.FileClaimActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.PolicyDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.InvestmentDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.investments.ProductDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

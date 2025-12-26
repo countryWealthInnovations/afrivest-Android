@@ -41,7 +41,7 @@ class InvestmentProductsAdapter(
 
                 // Returns
                 val returns = product.expected_returns
-                tvReturns.text = if (returns == "0.00" || returns.isEmpty()) {
+                tvReturns.text = if (returns == "0.00" || returns!!.isEmpty()) {
                     "No Returns"
                 } else {
                     "$returns% p.a"
@@ -55,7 +55,7 @@ class InvestmentProductsAdapter(
 
                 // Risk level
                 tvRiskLevel.text = product.risk_level_label
-                val riskColor = when (product.risk_level.lowercase()) {
+                val riskColor = when (product.risk_level!!.lowercase()) {
                     "very_low", "low" -> R.color.success_green
                     "medium" -> R.color.warning_yellow
                     "high", "very_high" -> R.color.error_red

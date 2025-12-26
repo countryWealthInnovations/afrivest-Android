@@ -1,5 +1,6 @@
 package com.afrivest.app.ui.assets
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,10 @@ class AssetsFragment : Fragment() {
     private fun setupRecyclerViews() {
         // Investments
         investmentsAdapter = InvestmentsAdapter { investment ->
-            // TODO: Navigate to investment details
+            val intent = Intent(requireContext(), InvestmentDetailActivity::class.java).apply {
+                putExtra("investment", investment)
+            }
+            startActivity(intent)
         }
 
         binding.rvInvestments.apply {
@@ -57,7 +61,10 @@ class AssetsFragment : Fragment() {
 
         // Policies
         policiesAdapter = PoliciesAdapter { policy ->
-            // TODO: Navigate to policy details
+            val intent = Intent(requireContext(), PolicyDetailActivity::class.java).apply {
+                putExtra("policy", policy)
+            }
+            startActivity(intent)
         }
 
         binding.rvPolicies.apply {

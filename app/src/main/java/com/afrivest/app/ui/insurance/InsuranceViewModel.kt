@@ -96,10 +96,11 @@ class InsuranceViewModel @Inject constructor(
         val currentProducts = _insuranceProducts.value ?: return
 
         val sortedProducts = when (sortBy) {
-            "coverage_high" -> currentProducts.sortedByDescending { it.price.toDoubleOrNull() ?: 0.0 }
-            "coverage_low" -> currentProducts.sortedBy { it.price.toDoubleOrNull() ?: 0.0 }
-            "premium_low" -> currentProducts.sortedBy { it.min_investment.toDoubleOrNull() ?: 0.0 }
-            "premium_high" -> currentProducts.sortedByDescending { it.min_investment.toDoubleOrNull() ?: 0.0 }
+            "coverage_high" -> currentProducts.sortedByDescending { it.price?.toDoubleOrNull() ?: 0.0 }
+            "coverage_low" -> currentProducts.sortedBy { it.price?.toDoubleOrNull() ?: 0.0 }
+            "premium_low" -> currentProducts.sortedBy { it.min_investment?.toDoubleOrNull() ?: 0.0 }
+            "premium_high" -> currentProducts.sortedByDescending { it.min_investment?.toDoubleOrNull()
+                ?: 0.0 }
             else -> currentProducts
         }
 

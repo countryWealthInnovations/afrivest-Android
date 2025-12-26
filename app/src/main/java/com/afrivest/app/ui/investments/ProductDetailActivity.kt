@@ -57,7 +57,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
             // Risk level
             tvRiskLevel.text = product.risk_level_label
-            val riskColor = when (product.risk_level.lowercase()) {
+            val riskColor = when (product.risk_level?.lowercase()) {
                 "very_low", "low" -> R.color.success_green
                 "medium" -> R.color.warning_yellow
                 "high", "very_high" -> R.color.error_red
@@ -67,7 +67,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
             // Stats
             tvReturnsLabel.text = "Expected Returns"
-            tvReturns.text = if (product.expected_returns == "0.00" || product.expected_returns.isEmpty()) {
+            tvReturns.text = if (product.expected_returns == "0.00" || product.expected_returns!!.isEmpty()) {
                 "No Returns"
             } else {
                 "${product.expected_returns}% p.a"
@@ -132,7 +132,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun validateAmount(): Boolean {
         val amountText = binding.etAmount.text.toString()
         val amount = amountText.toDoubleOrNull() ?: 0.0
-        val minAmount = product.min_investment.toDoubleOrNull() ?: 0.0
+        val minAmount = product.min_investment?.toDoubleOrNull() ?: 0.0
 
         val isValid = amount >= minAmount
         binding.btnPurchase.isEnabled = isValid
@@ -156,7 +156,7 @@ class ProductDetailActivity : AppCompatActivity() {
             return
         }
 
-        viewModel.purchaseProduct(product.id, amount, product.currency)
+        viewModel.purchaseProduct(product.id, amount, product.currency ?: "UGX")
     }
 
     private fun setupObservers() {

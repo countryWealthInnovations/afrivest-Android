@@ -239,6 +239,24 @@ interface ApiService {
     suspend fun withdrawMobileMoney(
         @Body request: WithdrawRequest
     ): Response<ApiResponse<WithdrawResponse>>
+
+    @GET("insurance-policies/{policy_id}/claims")
+    suspend fun getClaims(
+        @Path("policy_id") policyId: Int
+    ): Response<ApiResponse<List<InsuranceClaim>>>
+
+    @POST("insurance-policies/{policy_id}/claims")
+    suspend fun fileClaim(
+        @Path("policy_id") policyId: Int,
+        @Body request: FileClaimRequest
+    ): Response<ApiResponse<Any>>
+
+    data class FileClaimRequest(
+        val claim_type: String,
+        val amount: String,
+        val description: String,
+        val incident_date: String
+    )
 }
 
 // ==================== REQUEST MODELS ====================
@@ -375,17 +393,17 @@ data class InvestmentProduct(
     val slug: String,
     val short_description: String?,
     val featured_image: String?,
-    val price: String,
-    val currency: String,
-    val min_investment: String,
-    val min_investment_formatted: String,
-    val expected_returns: String,
-    val risk_level: String,
-    val risk_level_label: String,
-    val duration_label: String,
-    val availability_status: String,
+    val price: String?,
+    val currency: String?,
+    val min_investment: String?,
+    val min_investment_formatted: String?,  // Make nullable
+    val expected_returns: String?,
+    val risk_level: String?,
+    val risk_level_label: String?,
+    val duration_label: String?,
+    val availability_status: String?,
     val is_featured: Boolean,
-    val rating_average: String,
+    val rating_average: String?,
     val rating_count: Int,
     val category: InvestmentCategory?,
     val partner: InvestmentPartner?,
@@ -395,7 +413,7 @@ data class InvestmentProduct(
     val name: String get() = title
     val description: String? get() = short_description
     val image_url: String? get() = featured_image
-    val minimum_investment: String get() = min_investment_formatted
+    val minimum_investment: String get() = min_investment_formatted ?: min_investment ?: "0"
 }
 
 @Parcelize
@@ -420,7 +438,7 @@ data class PurchaseInvestmentRequest(
     val payout_frequency: String?,
     val auto_reinvest: Boolean?
 )
-
+@Parcelize
 data class UserInvestment(
     val id: Int,
     val investment_code: String,
@@ -434,7 +452,7 @@ data class UserInvestment(
     val maturity_date: String?,
     val status: String,
     val product: InvestmentProduct?
-) {
+) : Parcelable {
     // Compatibility properties
     val returns_earned: String
         get() {
@@ -446,12 +464,13 @@ data class UserInvestment(
 
 // ==================== INSURANCE MODELS ====================
 
+@Parcelize
 data class InsuranceProvider(
     val id: Int,
     val name: String,
     val logo_url: String?,
     val description: String?
-)
+) : Parcelable
 
 data class PurchaseInsurancePolicyRequest(
     val partner_id: Int,
@@ -466,12 +485,14 @@ data class PurchaseInsurancePolicyRequest(
     val wallet_id: Int?
 )
 
+@Parcelize
 data class Beneficiary(
     val name: String,
     val relationship: String,
     val percentage: Int
-)
+) : Parcelable
 
+@Parcelize
 data class InsurancePolicy(
     val id: Int,
     val user_id: Int,
@@ -485,9 +506,9 @@ data class InsurancePolicy(
     val status: String,
     val start_date: String,
     val end_date: String,
-    val beneficiaries: List<Beneficiary>,
-    val created_at: String
-)
+    val beneficiaries: List<Beneficiary>?,
+    val created_at: String?  // Make nullable
+) : Parcelable
 
 // ==================== GOLD MODELS ====================
 
@@ -503,4 +524,19 @@ data class ErrorDetails(
     val action: String?,
     val can_retry: Boolean,
     val severity: String
+) : Parcelable
+
+@Parcelize
+data class InsuranceClaim(
+    val id: Int,
+    val claim_number: String,
+    val policy_id: Int,
+    val claim_type: String,
+    val amount: String,
+    val amount_formatted: String,
+    val status: String,
+    val description: String?,
+    val incident_date: String,
+    val created_at: String,
+    val updated_at: String?
 ) : Parcelable
