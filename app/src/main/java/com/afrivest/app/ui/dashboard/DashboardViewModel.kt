@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afrivest.app.data.api.InvestmentProduct
 import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.Dashboard
 import com.afrivest.app.data.model.ProfileData
@@ -11,6 +12,7 @@ import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.Transaction
 import com.afrivest.app.data.model.User
 import com.afrivest.app.data.model.Wallet
+import com.afrivest.app.data.repository.InvestmentRepository
 import com.afrivest.app.data.repository.ProfileRepository
 import com.afrivest.app.data.repository.WalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val walletRepository: WalletRepository,
     private val profileRepository: ProfileRepository,
+    private val investmentRepository: InvestmentRepository,
     private val securePreferences: SecurePreferences
 ) : ViewModel() {
 
@@ -39,6 +42,9 @@ class DashboardViewModel @Inject constructor(
 
     private val _wallets = MutableLiveData<List<Wallet>>()
     val wallets: LiveData<List<Wallet>> = _wallets
+
+    private val _featuredInvestments = MutableLiveData<List<InvestmentProduct>>()
+    val featuredInvestments: LiveData<List<InvestmentProduct>> = _featuredInvestments
 
     private val _recentTransactions = MutableLiveData<List<Transaction>>()
     val recentTransactions: LiveData<List<Transaction>> = _recentTransactions
@@ -80,6 +86,8 @@ class DashboardViewModel @Inject constructor(
                     _isLoading.value = false
 
                     timber.log.Timber.d("✅ Profile loaded: ${result.data?.wallets?.size} wallets")
+                    // Add this after the profile load
+                    loadFeaturedInvestments()
                 }
                 is Resource.Loading -> {
                     // Handle loading state if needed
@@ -200,5 +208,20 @@ class DashboardViewModel @Inject constructor(
      */
     fun clearError() {
         _errorMessage.value = null
+    }
+
+    private fun loadFeaturedInvestments() {
+        viewModelScope.launch {
+            when (val result = investmentRepository.getFeaturedProducts()) {
+                is Resource.Success -> {
+                    _featuredInvestments.value = result.data?.take(3) ?: emptyList()
+                    timber.log.Timber.d("✅ Loaded featured investments")
+                }
+                is Resource.Error -> {
+                    timber.log.Timber.e("❌ Failed to load featured: ${result.message}")
+                }
+                is Resource.Loading -> {}
+            }
+        }
     }
 }

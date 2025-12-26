@@ -368,12 +368,7 @@ data class TransactionStatus(
 
 // ==================== INVESTMENT MODELS ====================
 
-data class InvestmentCategory(
-    val name: String,
-    val slug: String,
-    val icon: String?
-)
-
+@Parcelize
 data class InvestmentProduct(
     val id: Int,
     val title: String,
@@ -393,8 +388,9 @@ data class InvestmentProduct(
     val rating_average: String,
     val rating_count: Int,
     val category: InvestmentCategory?,
-    val partner: InvestmentPartner?
-) {
+    val partner: InvestmentPartner?,
+    val features: List<String>?
+) : Parcelable {
     // Compatibility properties
     val name: String get() = title
     val description: String? get() = short_description
@@ -402,11 +398,19 @@ data class InvestmentProduct(
     val minimum_investment: String get() = min_investment_formatted
 }
 
+@Parcelize
+data class InvestmentCategory(
+    val name: String,
+    val slug: String,
+    val icon: String?
+) : Parcelable
+
+@Parcelize
 data class InvestmentPartner(
     val name: String,
     val logo: String?
-) {
-    val id: Int? = null // For compatibility with filter logic
+) : Parcelable {
+    val id: Int? = null
 }
 
 data class PurchaseInvestmentRequest(
@@ -419,20 +423,26 @@ data class PurchaseInvestmentRequest(
 
 data class UserInvestment(
     val id: Int,
-    val user_id: Int,
-    val product_id: Int,
-    val product: InvestmentProduct?,
-    val amount: String,
+    val investment_code: String,
+    val amount_invested: String,
+    val amount_invested_formatted: String,
     val currency: String,
-    val status: String,
+    val current_value: String,
+    val current_value_formatted: String,
+    val returns_percentage: Double,
     val purchase_date: String,
     val maturity_date: String?,
-    val current_value: String,
-    val returns_earned: String,
-    val payout_frequency: String?,
-    val auto_reinvest: Boolean,
-    val created_at: String
-)
+    val status: String,
+    val product: InvestmentProduct?
+) {
+    // Compatibility properties
+    val returns_earned: String
+        get() {
+            val invested = amount_invested.toDoubleOrNull() ?: 0.0
+            val returns = (invested * returns_percentage) / 100
+            return String.format("%.2f", returns)
+        }
+}
 
 // ==================== INSURANCE MODELS ====================
 

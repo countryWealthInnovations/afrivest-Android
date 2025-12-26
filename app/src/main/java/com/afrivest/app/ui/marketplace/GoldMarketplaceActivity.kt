@@ -1,5 +1,6 @@
 package com.afrivest.app.ui.marketplace
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrivest.app.databinding.ActivityGoldMarketplaceBinding
+import com.afrivest.app.ui.investments.ProductDetailActivity
 import com.afrivest.app.ui.investments.adapters.InvestmentProductsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,8 +44,10 @@ class GoldMarketplaceActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = InvestmentProductsAdapter { product ->
-            // TODO: Navigate to product details
-            Toast.makeText(this, "Gold Product: ${product.name}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                putExtra(ProductDetailActivity.EXTRA_PRODUCT, product)
+            }
+            startActivity(intent)
         }
 
         binding.rvGoldProducts.apply {

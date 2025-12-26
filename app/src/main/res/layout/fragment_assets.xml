@@ -1,31 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@drawable/bg_gradient">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/screen_horizontal">
+        android:layout_height="match_parent">
 
-        <TextView
-            style="@style/TextAppearance.H1"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xl"
-            android:text="Assets"
-            android:textColor="@color/text_primary" />
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
 
-        <TextView
-            style="@style/TextAppearance.BodyRegular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_md"
-            android:text="Your investment portfolio will appear here"
-            android:textColor="@color/text_secondary" />
+            <!-- Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Assets"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_md" />
 
-    </LinearLayout>
+            <!-- Summary Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/background_dark_1"
+                app:strokeColor="@color/border_default"
+                app:strokeWidth="1dp"
+                app:cardCornerRadius="@dimen/radius_medium">
 
-</ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Value"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primary_gold"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"
+                        tools:text="UGX 50,000,000" />
+
+                    <TextView
+                        android:id="@+id/tvTotalReturns"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/success_green"
+                        android:textSize="14sp"
+                        android:layout_marginTop="@dimen/spacing_xs"
+                        tools:text="+UGX 5,000,000" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tabs -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:tabTextColor="@color/text_secondary"
+                app:tabSelectedTextColor="@color/primary_gold"
+                app:tabIndicatorColor="@color/primary_gold"
+                app:tabIndicatorHeight="2dp"
+                android:layout_marginBottom="@dimen/spacing_md" />
+
+            <!-- Investments RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInvestments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Policies RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPolicies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Empty State - Investments -->
+            <TextView
+                android:id="@+id/tvEmptyInvestments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No investments yet\nStart investing to see your portfolio here"
+                android:textColor="@color/text_secondary"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="64dp"
+                android:visibility="gone" />
+
+            <!-- Empty State - Policies -->
+            <TextView
+                android:id="@+id/tvEmptyPolicies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No insurance policies\nPurchase insurance to see your policies here"
+                android:textColor="@color/text_secondary"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="64dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Loading Overlay -->
+    <include
+        android:id="@+id/loadingOverlay"
+        layout="@layout/component_loading_overlay"
+        android:visibility="gone" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

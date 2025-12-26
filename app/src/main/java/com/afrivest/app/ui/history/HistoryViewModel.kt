@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.Transaction
+import com.afrivest.app.data.repository.InvestmentRepository
 import com.afrivest.app.data.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val investmentRepository: InvestmentRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData(false)
@@ -61,9 +63,15 @@ class HistoryViewModel @Inject constructor(
                 is Resource.Success -> {
                     result.data?.let { transactions ->
                         allTransactions.addAll(transactions)
-                        _transactions.value = allTransactions.toList()
-                        Timber.d("✅ Loaded ${transactions.size} transactions")
                     }
+
+                    // Load investment purchases
+                    loadInvestmentPurchases()
+
+                    _transactions.value = allTransactions.sortedByDescending {
+                        parseDate(it.created_at)
+                    }
+                    Timber.d("✅ Loaded ${allTransactions.size} total transactions")
                     _isLastPage.value = true
                 }
                 is Resource.Error -> {
@@ -120,6 +128,51 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
+
+    private suspend fun loadInvestmentPurchases() {
+        when (val result = investmentRepository.getUserInvestments(status = null)) {
+            is Resource.Success -> {
+                result.data?.forEach { investment ->
+                    val transaction = Transaction(
+                        id = -investment.id, // Negative ID to avoid conflicts
+                        reference = investment.investment_code,
+                        type = "investment",
+                        amount = investment.amount_invested,
+                        fee_amount = null,
+                        total_amount = investment.amount_invested,
+                        currency = investment.currency,
+                        status = investment.status,
+                        payment_channel = "wallet",
+                        external_reference = null,
+                        description = "Investment: ${investment.product?.title}",
+                        direction = "sent",
+                        other_party = null,
+                        user = null,
+                        wallet = null,
+                        recipient = null,
+                        created_at = investment.purchase_date,
+                        updated_at = null,
+                        completed_at = investment.purchase_date
+                    )
+                    allTransactions.add(transaction)
+                }
+            }
+            is Resource.Error -> {
+                Timber.e("❌ Failed to load investments: ${result.message}")
+            }
+            is Resource.Loading -> {}
+        }
+    }
+
+    private fun parseDate(dateString: String): Long {
+        return try {
+            val format = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", java.util.Locale.US)
+            format.timeZone = java.util.TimeZone.getTimeZone("UTC")
+            format.parse(dateString)?.time ?: 0
+        } catch (e: Exception) {
+            0
+        }
+    }
     /**
      * Filter transactions by status
      */

@@ -511,35 +511,20 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupInvestments() {
-        val investments = listOf(
-            Investment(
-                "Old Mutual Uganda",
-                "Treasury Bond",
-                "12.8% p.a",
-                "1-3 Years",
-                "UGX 250,000"
-            ),
-            Investment(
-                "Stanbic Bank",
-                "Unit Trust",
-                "15.2% p.a",
-                "6-12 Months",
-                "UGX 100,000"
-            ),
-            Investment(
-                "Centenary Bank",
-                "Real Estate",
-                "10.5% p.a",
-                "2-5 Years",
-                "UGX 500,000"
-            )
-        )
+        viewModel.featuredInvestments.observe(viewLifecycleOwner) { investments ->
+            if (investments.isNotEmpty()) {
+                val adapter = InvestmentsAdapter(investments) { product ->
+                    val intent = Intent(requireContext(), com.afrivest.app.ui.investments.ProductDetailActivity::class.java).apply {
+                        putExtra(com.afrivest.app.ui.investments.ProductDetailActivity.EXTRA_PRODUCT, product)
+                    }
+                    startActivity(intent)
+                }
 
-        val adapter = InvestmentsAdapter(investments)
-
-        binding.rvInvestments.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = adapter
+                binding.rvInvestments.apply {
+                    layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                    this.adapter = adapter
+                }
+            }
         }
     }
 

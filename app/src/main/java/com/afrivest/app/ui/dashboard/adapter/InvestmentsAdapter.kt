@@ -7,18 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.afrivest.app.R
-
-data class Investment(
-    val companyName: String,
-    val investmentType: String,
-    val rate: String,
-    val maturity: String,
-    val minInvestment: String,
-    val logoIcon: Int = R.drawable.ic_chart
-)
+import com.afrivest.app.data.api.InvestmentProduct
 
 class InvestmentsAdapter(
-    private val investments: List<Investment>
+    private val investments: List<InvestmentProduct>,
+    private val onItemClick: (InvestmentProduct) -> Unit
 ) : RecyclerView.Adapter<InvestmentsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -38,12 +31,16 @@ class InvestmentsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val investment = investments[position]
-        holder.ivLogo.setImageResource(investment.logoIcon)
-        holder.tvCompanyName.text = investment.companyName
-        holder.tvInvestmentType.text = investment.investmentType
-        holder.tvRate.text = investment.rate
-        holder.tvMaturity.text = investment.maturity
-        holder.tvMinInvestment.text = investment.minInvestment
+
+        holder.tvCompanyName.text = investment.partner?.name ?: investment.category?.name
+        holder.tvInvestmentType.text = investment.category?.name
+        holder.tvRate.text = if (investment.expected_returns == "0.00") "No Returns" else "${investment.expected_returns}% p.a"
+        holder.tvMaturity.text = investment.duration_label
+        holder.tvMinInvestment.text = investment.min_investment_formatted
+
+        holder.itemView.setOnClickListener {
+            onItemClick(investment)
+        }
     }
 
     override fun getItemCount() = investments.size

@@ -1,5 +1,6 @@
 package com.afrivest.app.ui.investments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -42,8 +43,10 @@ class InvestmentProductsActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = InvestmentProductsAdapter { product ->
-            // TODO: Navigate to product details
-            Toast.makeText(this, "Product: ${product.name}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                putExtra(ProductDetailActivity.EXTRA_PRODUCT, product)
+            }
+            startActivity(intent)
         }
 
         binding.rvProducts.apply {
