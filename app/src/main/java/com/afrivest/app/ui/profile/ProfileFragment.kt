@@ -82,6 +82,16 @@ class ProfileFragment : Fragment() {
         // Profile Header
         binding.tvTitle.text = "Profile & Settings"
 
+        // Logout Button
+        binding.btnLogout.setOnClickListener {
+            showLogoutConfirmation()
+        }
+
+        // Delete Account Button
+        binding.btnDeleteAccount.setOnClickListener {
+            showLogoutConfirmation()
+        }
+
         // Configure Account Section Rows
         with(binding.rowPersonalInfo) {
             ivIcon.setImageResource(R.drawable.ic_user_placeholder)

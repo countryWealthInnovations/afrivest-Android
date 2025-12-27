@@ -312,6 +312,24 @@
                 app:cornerRadius="12dp"
                 style="@style/Widget.Material3.Button.OutlinedButton" />
 
+            <!-- Delete Account Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_account"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:text="Delete Account"
+                android:textColor="@color/error_red"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_delete"
+                app:iconTint="@color/error_red"
+                app:iconGravity="textStart"
+                app:strokeColor="@color/error_red"
+                app:strokeWidth="1dp"
+                app:cornerRadius="12dp"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+
             <!-- App Version -->
             <TextView
                 android:layout_width="wrap_content"
