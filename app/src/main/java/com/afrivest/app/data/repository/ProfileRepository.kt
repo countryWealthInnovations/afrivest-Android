@@ -2,11 +2,15 @@ package com.afrivest.app.data.repository
 
 import com.afrivest.app.data.api.ApiResponse
 import com.afrivest.app.data.api.ApiService
+import com.afrivest.app.data.api.AvatarResponse
 import com.afrivest.app.data.api.UpdatePasswordRequest
+import com.afrivest.app.data.api.UpdateProfileRequest
 import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.ProfileData
 import com.afrivest.app.data.model.Resource
+import com.afrivest.app.data.model.User
 import com.afrivest.app.utils.Constants
+import okhttp3.MultipartBody
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
@@ -110,6 +114,41 @@ class ProfileRepository @Inject constructor(
         } catch (e: Exception) {
             Timber.e(e, "❌ Profile force refresh exception")
             Resource.Error(e.message ?: "Unknown error occurred")
+        }
+    }
+
+    suspend fun updateProfile(
+        name: String?,
+        phoneNumber: String?
+    ): Resource<User> {
+        return try {
+            val response = apiService.updateProfile(
+                UpdateProfileRequest(name, phoneNumber)
+            )
+            handleResponse(response)
+        } catch (e: Exception) {
+            Timber.e(e, "Update profile failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
+    suspend fun uploadAvatar(avatarPart: MultipartBody.Part): Resource<AvatarResponse> {
+        return try {
+            val response = apiService.uploadAvatar(avatarPart)
+            handleResponse(response)
+        } catch (e: Exception) {
+            Timber.e(e, "Upload avatar failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
+    suspend fun deleteAvatar(): Resource<Unit> {
+        return try {
+            val response = apiService.deleteAvatar()
+            handleResponse(response)
+        } catch (e: Exception) {
+            Timber.e(e, "Delete avatar failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
         }
     }
 

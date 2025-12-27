@@ -88,7 +88,7 @@ class ProfileFragment : Fragment() {
             tvTitle.text = "Personal Information"
             tvSubtitle.text = "Name, Email, Phone"
             root.setOnClickListener {
-                // TODO: Navigate to edit profile
+                startActivity(Intent(requireContext(), EditProfileActivity::class.java))
             }
         }
 
@@ -97,7 +97,7 @@ class ProfileFragment : Fragment() {
             tvTitle.text = "Notifications"
             tvSubtitle.text = "Push, Email, SMS preferences"
             root.setOnClickListener {
-                // TODO: Navigate to notifications settings
+                startActivity(Intent(requireContext(), NotificationSettingsActivity::class.java))
             }
         }
 
