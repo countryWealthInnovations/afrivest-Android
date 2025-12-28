@@ -27,7 +27,7 @@ class ProductDetailViewModel @Inject constructor(
     private val _purchaseSuccess = MutableLiveData<Boolean>()
     val purchaseSuccess: LiveData<Boolean> = _purchaseSuccess
 
-    fun purchaseProduct(productId: Int, amount: Double, currency: String) {
+    fun purchaseProduct(productId: Int, amount: Double, currency: String, autoReinvest: Boolean = false) {
         viewModelScope.launch {
             _isLoading.value = true
 
@@ -35,8 +35,8 @@ class ProductDetailViewModel @Inject constructor(
                 product_id = productId,
                 amount = amount,
                 currency = currency,
-                payout_frequency = null,
-                auto_reinvest = false
+                payout_frequency = "monthly",
+                auto_reinvest = autoReinvest
             )
 
             when (val result = investmentRepository.purchaseInvestment(request)) {
@@ -45,7 +45,8 @@ class ProductDetailViewModel @Inject constructor(
                     Timber.d("✅ Purchase successful")
                 }
                 is Resource.Error -> {
-                    _errorMessage.value = result.message
+                    _errorMessage.value = result.message ?: "Purchase failed"
+                    _purchaseSuccess.value = false
                     Timber.e("❌ Purchase failed: ${result.message}")
                 }
                 is Resource.Loading -> {

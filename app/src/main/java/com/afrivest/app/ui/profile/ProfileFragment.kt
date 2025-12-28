@@ -12,14 +12,19 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.afrivest.app.R
+import com.afrivest.app.data.local.SecurePreferences
+import com.afrivest.app.data.repository.AuthRepository
 import com.afrivest.app.databinding.FragmentProfileBinding
 import com.afrivest.app.ui.auth.LoginActivity
 import com.afrivest.app.utils.gone
 import com.afrivest.app.utils.visible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -27,6 +32,12 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var securePreferences: SecurePreferences
+
+    @Inject
+    lateinit var authRepository: AuthRepository
 
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
@@ -89,7 +100,7 @@ class ProfileFragment : Fragment() {
 
         // Delete Account Button
         binding.btnDeleteAccount.setOnClickListener {
-            showLogoutConfirmation()
+            showDeleteAccountConfirmation()
         }
 
         // Configure Account Section Rows
@@ -204,10 +215,37 @@ class ProfileFragment : Fragment() {
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Logout") { _, _ ->
-                viewModel.logout()
+                logout()
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun showDeleteAccountConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete Account")
+            .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                logout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun logout() {
+        lifecycleScope.launch {
+            try {
+                // Call logout API
+                authRepository.logout()
+                // Navigate to login screen (data already cleared in repository)
+                navigateToLogin()
+            } catch (e: Exception) {
+                Timber.e(e, "Logout API failed")
+                // Even if API fails, clear local data and logout
+                securePreferences.clearAll()
+                navigateToLogin()
+            }
+        }
     }
 
     private fun navigateToLogin() {

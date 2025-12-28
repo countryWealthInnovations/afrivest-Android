@@ -156,7 +156,8 @@ class ProductDetailActivity : AppCompatActivity() {
             return
         }
 
-        viewModel.purchaseProduct(product.id, amount, product.currency ?: "UGX")
+        val autoReinvest = binding.switchAutoReinvest.isChecked
+        viewModel.purchaseProduct(product.id, amount, product.currency ?: "UGX", autoReinvest)
     }
 
     private fun setupObservers() {

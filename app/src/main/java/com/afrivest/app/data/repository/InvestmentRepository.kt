@@ -124,7 +124,23 @@ class InvestmentRepository @Inject constructor(
                         Resource.Error(apiResponse.message ?: "Purchase failed")
                     }
                 } else {
-                    Resource.Error("Purchase failed")
+                    val errorBody = response.errorBody()?.string()
+                    val errorMsg = try {
+                        val json = org.json.JSONObject(errorBody ?: "{}")
+                        when {
+                            json.has("errors") -> {
+                                val errors = json.getJSONObject("errors")
+                                val firstKey = errors.keys().next()
+                                val errorArray = errors.getJSONArray(firstKey)
+                                errorArray.getString(0)
+                            }
+                            json.has("message") -> json.getString("message")
+                            else -> "Purchase failed"
+                        }
+                    } catch (e: Exception) {
+                        "Purchase failed"
+                    }
+                    Resource.Error(errorMsg)
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Purchase investment error")
