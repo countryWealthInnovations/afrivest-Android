@@ -368,7 +368,8 @@ Building financial inclusion solutions for Africa
 For technical support or bug reports:
 - Email: support@countrywealth.ug
 - Website: https://afrivest.co
-
+- Key: countrywealth.keystore
+- Password: cwapps
 ---
 
 **Current Status:** Foundation complete - Ready for UI implementation  
