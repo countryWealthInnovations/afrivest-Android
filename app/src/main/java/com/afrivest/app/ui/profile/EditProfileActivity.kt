@@ -1,18 +1,17 @@
 package com.afrivest.app.ui.profile
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.afrivest.app.R
 import com.afrivest.app.databinding.ActivityEditProfileBinding
 import com.afrivest.app.utils.gone
@@ -30,19 +29,19 @@ class EditProfileActivity : AppCompatActivity() {
 
     private var selectedImageBitmap: Bitmap? = null
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
         uri?.let {
-            selectedImageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
+            selectedImageBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(contentResolver, it)
+            }
             binding.ivAvatar.setImageBitmap(selectedImageBitmap)
             binding.tvRemovePhoto.visible()
-        }
-    }
-
-    private val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) {
-            pickImage.launch("image/*")
-        } else {
-            Snackbar.make(binding.root, "Permission denied", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -108,15 +107,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.tvChangePhoto.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                pickImage.launch("image/*")
-            } else {
-                requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         binding.tvRemovePhoto.setOnClickListener {

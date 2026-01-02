@@ -144,7 +144,8 @@ class PolicyDetailActivity : AppCompatActivity() {
 
     private fun formatDate(dateString: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US)
+            inputFormat.timeZone = TimeZone.getTimeZone("UTC")
             val date = inputFormat.parse(dateString)
 
             val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.US)
