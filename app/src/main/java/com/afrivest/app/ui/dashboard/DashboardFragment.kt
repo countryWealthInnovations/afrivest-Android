@@ -24,13 +24,16 @@ import com.afrivest.app.ui.dashboard.adapters.*
 import timber.log.Timber
 import com.afrivest.app.R
 import com.afrivest.app.data.model.Wallet
+import com.afrivest.app.data.model.InvestmentSummary
 import com.afrivest.app.ui.deposit.DepositActivity
 import com.afrivest.app.ui.insurance.InsuranceListActivity
-import com.afrivest.app.ui.investments.InvestmentCategoriesActivity
 import com.afrivest.app.ui.investments.InvestmentProductsActivity
 import com.afrivest.app.ui.marketplace.GoldMarketplaceActivity
-import com.afrivest.app.ui.marketplace.MarketplaceActivity
+import com.afrivest.app.ui.assets.AssetsFragment
 import com.google.android.material.button.MaterialButton
+import androidx.core.content.ContextCompat
+import com.afrivest.app.ui.transfer.WithdrawActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 @AndroidEntryPoint
@@ -41,6 +44,9 @@ class DashboardFragment : Fragment() {
     private val viewModel: DashboardViewModel by viewModels()
     @Inject
     lateinit var securePreferences: SecurePreferences
+
+    private var isBalanceHidden = false
+    private var isInvestmentHidden = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +60,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupKYCBanner()
+        setupWalletCardHorizontal()
         setupObservers()
         setupClickListeners()
 
@@ -119,6 +126,9 @@ class DashboardFragment : Fragment() {
                         .circleCrop()
                         .into(binding.ivUserAvatar)
                 }
+
+                // Update wallet card
+                updateWalletCardHorizontal(it.investmentSummary)
             }
         }
 
@@ -129,31 +139,102 @@ class DashboardFragment : Fragment() {
 
         // Wallets
         viewModel.wallets.observe(viewLifecycleOwner) { wallets ->
-            setupWalletCards()
+            updateWalletBalance()
         }
 
-        // Amount visibility
-        viewModel.isAmountHidden.observe(viewLifecycleOwner) { isHidden ->
-            updateWalletCardsVisibility(isHidden)
-        }
+        // Amount visibility - REMOVED (now using local state)
 
-        // Other currencies expansion
-        viewModel.isOtherCurrenciesExpanded.observe(viewLifecycleOwner) { isExpanded ->
-            if (isExpanded) {
-                binding.llOtherCurrencies.visible()
-                binding.btnToggleOtherCurrencies.text = "Hide Other Currencies"
-                binding.btnToggleOtherCurrencies.setIconResource(R.drawable.ic_chevron_up)
-                setupOtherCurrencyCards()
-            } else {
-                binding.llOtherCurrencies.gone()
-                binding.btnToggleOtherCurrencies.text = "Show Other Currencies"
-                binding.btnToggleOtherCurrencies.setIconResource(R.drawable.ic_chevron_down)
-            }
-        }
+
 
         // Recent transactions
         viewModel.recentTransactions.observe(viewLifecycleOwner) { transactions ->
             // TODO: Setup transactions RecyclerView
+        }
+    }
+
+    private fun setupWalletCardHorizontal() {
+        val card = binding.walletCardHorizontal.root
+
+        // Setup wallet balance section
+        val tvBalance = card.findViewById<TextView>(R.id.tvBalance)
+        val ivHideToggle = card.findViewById<ImageView>(R.id.ivHideToggle)
+        val btnAddMoney = card.findViewById<MaterialButton>(R.id.btnAddMoney)
+        val btnWithdraw = card.findViewById<MaterialButton>(R.id.btnWithdraw)
+
+        // Setup investment section
+        val ivInvestmentHideToggle = card.findViewById<ImageView>(R.id.ivInvestmentHideToggle)
+        val llInvestmentSection = card.findViewById<LinearLayout>(R.id.llInvestmentSection)
+
+        // Toggle visibility for balance only
+        ivHideToggle.setOnClickListener {
+            isBalanceHidden = !isBalanceHidden
+            val depositWallet = viewModel.getDepositWallet()
+            if (depositWallet != null) {
+                tvBalance.text = if (isBalanceHidden) {
+                    "****"
+                } else {
+                    viewModel.formatBalance(depositWallet.balance, depositWallet.currency)
+                }
+                ivHideToggle.setImageResource(if (isBalanceHidden) R.drawable.ic_eye_off else R.drawable.ic_eye)
+            }
+        }
+
+        // Toggle visibility for investment only
+        ivInvestmentHideToggle.setOnClickListener {
+            isInvestmentHidden = !isInvestmentHidden
+            val summary = viewModel.getInvestmentSummary()
+            if (summary != null && summary.hasInvestments()) {
+                val tvInvestmentAmount = card.findViewById<TextView>(R.id.tvInvestmentAmount)
+                val tvReturnsPercentage = card.findViewById<TextView>(R.id.tvReturnsPercentage)
+
+                tvInvestmentAmount.text = if (isInvestmentHidden) {
+                    "****"
+                } else {
+                    viewModel.formatBalance(summary.currentValue.toString(), "UGX")
+                }
+
+                tvReturnsPercentage.text = if (isInvestmentHidden) {
+                    "**%"
+                } else {
+                    summary.getFormattedPercentage()
+                }
+
+                ivInvestmentHideToggle.setImageResource(if (isInvestmentHidden) R.drawable.ic_eye_off else R.drawable.ic_eye)
+            }
+        }
+
+        // Add money button
+        btnAddMoney.setOnClickListener {
+            startActivity(Intent(requireContext(), DepositActivity::class.java))
+        }
+
+        // Withdraw button
+        btnWithdraw.setOnClickListener {
+            startActivity(Intent(context, WithdrawActivity::class.java))
+        }
+
+        // Investment section click
+        llInvestmentSection.setOnClickListener {
+            val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
+            bottomNav?.selectedItemId = R.id.nav_assets
+        }
+    }
+
+    private fun updateWalletCardHorizontal(investmentSummary: InvestmentSummary?) {
+        val card = binding.walletCardHorizontal.root
+
+        val tvInvestmentAmount = card.findViewById<TextView>(R.id.tvInvestmentAmount)
+        val tvReturnsPercentage = card.findViewById<TextView>(R.id.tvReturnsPercentage)
+
+        if (investmentSummary != null && investmentSummary.hasInvestments()) {
+            tvInvestmentAmount.text = viewModel.formatBalance(
+                investmentSummary.currentValue.toString(),
+                "UGX"
+            )
+            tvReturnsPercentage.text = "${investmentSummary.getFormattedPercentage()}"
+        } else {
+            tvInvestmentAmount.text = "UGX 0.00"
+            tvReturnsPercentage.text = "0%"
         }
     }
 
@@ -177,315 +258,18 @@ class DashboardFragment : Fragment() {
             Toast.makeText(requireContext(), "Notifications", Toast.LENGTH_SHORT).show()
         }
 
-        // Toggle other currencies
-        binding.btnToggleOtherCurrencies.setOnClickListener {
-            viewModel.toggleOtherCurrencies()
-        }
-
-        // Quick Actions
-
     }
 
-    private fun setupWalletCards() {
-        // Setup Deposit Wallet Card
+    private fun updateWalletBalance() {
         val depositWallet = viewModel.getDepositWallet()
         if (depositWallet != null) {
-            binding.depositWalletCard.root.visible()
-            setupDepositWalletCard(depositWallet)
-        } else {
-            binding.depositWalletCard.root.gone()
-        }
-
-        // Setup Interest Wallet Card - Show placeholder (pass null or dummy wallet)
-        val interestWallet = viewModel.getInterestWallet()
-        if (interestWallet != null) {
-            setupInterestWalletCard(interestWallet)
-        } else {
-            // Show placeholder - create a dummy wallet or just call the setup function
-            binding.interestWalletCard.root.visible()
-            setupInterestWalletPlaceholder()
-        }
-
-        // Show/hide toggle button based on other currencies
-        if (viewModel.getOtherCurrencyWallets().isEmpty()) {
-            binding.btnToggleOtherCurrencies.gone()
-        } else {
-            binding.btnToggleOtherCurrencies.visible()
-            binding.btnToggleOtherCurrencies.text = "Show Other Currencies (${viewModel.getOtherCurrencyWallets().size})"
-        }
-    }
-
-    private fun setupInterestWalletPlaceholder() {
-        val cardView = binding.interestWalletCard.root
-
-        // Make card slightly transparent to indicate it's a placeholder
-        cardView.alpha = 0.5f
-
-        // Get views from included layout
-        val ivWalletIcon = cardView.findViewById<ImageView>(R.id.ivWalletIcon)
-        val tvWalletTitle = cardView.findViewById<TextView>(R.id.tvWalletTitle)
-        val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-        val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-        val btnAction = cardView.findViewById<MaterialButton>(R.id.btnAction)
-
-        // Set wallet icon with reduced opacity
-        ivWalletIcon.setImageResource(R.drawable.ic_chart)
-        ivWalletIcon.setColorFilter(
-            resources.getColor(R.color.primary_gold, null),
-            android.graphics.PorterDuff.Mode.SRC_IN
-        )
-        ivWalletIcon.alpha = 0.5f
-
-        // Set title
-        tvWalletTitle.text = "Interest Wallet"
-        tvWalletTitle.setTextColor(resources.getColor(R.color.text_secondary, null))
-
-        // Hide toggle button
-        ivHideToggle.visibility = View.GONE
-
-        // Set placeholder balance
-        tvBalance.text = "Coming Soon"
-        tvBalance.setTextColor(resources.getColor(R.color.text_secondary, null))
-        tvBalance.alpha = 0.5f
-
-        // Set action button as disabled
-        btnAction.text = "Start Earning"
-        btnAction.isEnabled = false
-        btnAction.alpha = 0.3f
-        btnAction.icon = null
-        btnAction.setOnClickListener(null)
-    }
-
-    private fun setupDepositWalletCard(wallet: com.afrivest.app.data.model.Wallet) {
-        val cardView = binding.depositWalletCard.root
-
-        // Get views from included layout
-        val ivWalletIcon = cardView.findViewById<ImageView>(R.id.ivWalletIcon)
-        val tvWalletTitle = cardView.findViewById<TextView>(R.id.tvWalletTitle)
-        val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-        val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-        val btnAction = cardView.findViewById<MaterialButton>(R.id.btnAction)
-
-        // Set wallet icon (deposit wallet)
-        ivWalletIcon.setImageResource(R.drawable.ic_wallet)
-
-        // Set title
-        tvWalletTitle.text = "Deposit Wallet"
-
-        // Set balance
-        tvBalance.text = viewModel.formatBalance(wallet.balance, wallet.currency)
-
-        // Set action button
-        btnAction.text = "Deposit"
-        btnAction.setIconResource(R.drawable.ic_chevron_down)
-        btnAction.setOnClickListener {
-            startActivity(Intent(requireContext(), DepositActivity::class.java))
-        }
-
-        // Toggle visibility
-        ivHideToggle.setOnClickListener {
-            viewModel.toggleAmountVisibility()
-        }
-    }
-
-    private fun setupInterestWalletCard(wallet: com.afrivest.app.data.model.Wallet) {
-        val cardView = binding.interestWalletCard.root
-        cardView.visible()
-
-        // Make card slightly transparent to indicate it's a placeholder
-        cardView.alpha = 0.5f
-
-        // Get views from included layout
-        val ivWalletIcon = cardView.findViewById<ImageView>(R.id.ivWalletIcon)
-        val tvWalletTitle = cardView.findViewById<TextView>(R.id.tvWalletTitle)
-        val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-        val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-        val btnAction = cardView.findViewById<MaterialButton>(R.id.btnAction)
-
-        // Set wallet icon with reduced opacity
-        ivWalletIcon.setImageResource(R.drawable.ic_chart)
-        ivWalletIcon.setColorFilter(
-            resources.getColor(R.color.primary_gold, null),
-            android.graphics.PorterDuff.Mode.SRC_IN
-        )
-        ivWalletIcon.alpha = 0.5f
-
-        // Set title
-        tvWalletTitle.text = "Interest Wallet"
-        tvWalletTitle.setTextColor(resources.getColor(R.color.text_secondary, null))
-
-        // Hide toggle button
-        ivHideToggle.visibility = View.GONE
-
-        // Set placeholder balance
-        tvBalance.text = "Coming Soon"
-        tvBalance.setTextColor(resources.getColor(R.color.text_secondary, null))
-        tvBalance.alpha = 0.5f
-
-        // Set action button as disabled with gray background
-        btnAction.text = "Start Earning"
-        btnAction.isEnabled = false
-        btnAction.setBackgroundColor(resources.getColor(R.color.text_secondary, null))
-        btnAction.alpha = 0.3f
-        btnAction.icon = null
-        btnAction.setOnClickListener(null)
-    }
-
-//    private fun setupInterestWalletCard(wallet: com.afrivest.app.data.model.Wallet) {
-//        val cardView = binding.interestWalletCard.root
-//
-//        // Get views from included layout
-//        val ivWalletIcon = cardView.findViewById<ImageView>(R.id.ivWalletIcon)
-//        val tvWalletTitle = cardView.findViewById<TextView>(R.id.tvWalletTitle)
-//        val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-//        val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-//        val btnAction = cardView.findViewById<MaterialButton>(R.id.btnAction)
-//
-//        // Set wallet icon (interest wallet)
-//        ivWalletIcon.setImageResource(R.drawable.ic_chart)
-//
-//        // Set title
-//        tvWalletTitle.text = "Interest Wallet"
-//
-//        // Set balance
-//        tvBalance.text = viewModel.formatBalance(wallet.balance, wallet.currency)
-//
-//        // Set action button
-//        btnAction.text = "Withdraw"
-//        btnAction.setIconResource(R.drawable.ic_chevron_up)
-//        btnAction.setOnClickListener {
-//            // TODO: Navigate to withdraw screen
-//            Toast.makeText(requireContext(), "Withdraw - Coming Soon", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        // Toggle visibility
-//        ivHideToggle.setOnClickListener {
-//            viewModel.toggleAmountVisibility()
-//        }
-//    }
-
-    private fun updateWalletCardsVisibility(isHidden: Boolean) {
-        // Update deposit wallet
-        val depositWallet = viewModel.getDepositWallet()
-        if (depositWallet != null) {
-            val cardView = binding.depositWalletCard.root
-            val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-            val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-
+            val card = binding.walletCardHorizontal.root
+            val tvBalance = card.findViewById<TextView>(R.id.tvBalance)
             tvBalance.text = viewModel.formatBalance(depositWallet.balance, depositWallet.currency)
-            ivHideToggle.setImageResource(
-                if (isHidden) R.drawable.ic_eye_off else R.drawable.ic_eye
-            )
-        }
-
-        // Update interest wallet
-        val interestWallet = viewModel.getInterestWallet()
-        if (interestWallet != null) {
-            val cardView = binding.interestWalletCard.root
-            val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-            val ivHideToggle = cardView.findViewById<ImageView>(R.id.ivHideToggle)
-
-            tvBalance.text = viewModel.formatBalance(interestWallet.balance, interestWallet.currency)
-            ivHideToggle.setImageResource(
-                if (isHidden) R.drawable.ic_eye_off else R.drawable.ic_eye
-            )
         }
     }
 
-    private fun setupOtherCurrencyCards() {
-        binding.llOtherCurrencies.removeAllViews()
-
-        val otherWallets = viewModel.getOtherCurrencyWallets()
-
-        if (otherWallets.isEmpty()) {
-            return
-        }
-
-        // Group wallets into pairs (2 per row)
-        otherWallets.chunked(2).forEach { pair ->
-            // Create horizontal LinearLayout for the row
-            val rowLayout = LinearLayout(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    topMargin = resources.getDimensionPixelSize(R.dimen.spacing_md)
-                }
-                orientation = LinearLayout.HORIZONTAL
-                weightSum = 2f
-            }
-
-            // Add first wallet card
-            val firstCard = createOtherCurrencyCard(pair[0])
-            val firstParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            ).apply {
-                rightMargin = resources.getDimensionPixelSize(R.dimen.spacing_sm)
-            }
-            firstCard.layoutParams = firstParams
-            rowLayout.addView(firstCard)
-
-            // Add second wallet card or spacer
-            if (pair.size > 1) {
-                val secondCard = createOtherCurrencyCard(pair[1])
-                val secondParams = LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1f
-                ).apply {
-                    leftMargin = resources.getDimensionPixelSize(R.dimen.spacing_sm)
-                }
-                secondCard.layoutParams = secondParams
-                rowLayout.addView(secondCard)
-            } else {
-                // Add empty space for alignment
-                val spacer = View(requireContext()).apply {
-                    layoutParams = LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1f
-                    )
-                }
-                rowLayout.addView(spacer)
-            }
-
-            binding.llOtherCurrencies.addView(rowLayout)
-        }
-    }
-
-    private fun createOtherCurrencyCard(wallet: Wallet): View {
-        val cardView = layoutInflater.inflate(R.layout.item_other_currency_card, null)
-
-        val ivCurrencyIcon = cardView.findViewById<ImageView>(R.id.ivCurrencyIcon)
-        val tvCurrencyName = cardView.findViewById<TextView>(R.id.tvCurrencyName)
-        val tvBalance = cardView.findViewById<TextView>(R.id.tvBalance)
-        val btnViewDetails = cardView.findViewById<MaterialButton>(R.id.btnViewDetails)
-
-        // Set currency icon based on currency type
-        val iconRes = when (wallet.currency) {
-            "USD" -> R.drawable.ic_dollar
-            "EUR" -> R.drawable.ic_euro
-            "GBP" -> R.drawable.ic_pound
-            else -> R.drawable.ic_currency
-        }
-        ivCurrencyIcon.setImageResource(iconRes)
-
-        // Set currency name
-        tvCurrencyName.text = "${wallet.currency} Wallet"
-
-        // Set balance
-        tvBalance.text = viewModel.formatBalance(wallet.balance, wallet.currency)
-
-        // Set click listener for view details
-        btnViewDetails.setOnClickListener {
-            // TODO: Navigate to wallet detail screen
-            Toast.makeText(requireContext(), "${wallet.currency} Wallet Details - Coming Soon", Toast.LENGTH_SHORT).show()
-        }
-
-        return cardView
-    }
+    // REMOVED - No longer needed, using local state for toggles
 
     private fun setupQuickActions() {
         val actions = listOf(

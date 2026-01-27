@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="200dp"
+    android:layout_weight="1"
+    app:cardBackgroundColor="#3A3A3A"
+    app:cardCornerRadius="@dimen/radius_medium"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/border_default"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_md">
+
+        <!-- Investment Icon -->
+        <ImageView
+            android:id="@+id/ivInvestmentIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_trending_up"
+            app:tint="@color/primary_gold" />
+
+        <!-- Title with Hide Toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvInvestmentTitle"
+                style="@style/TextAppearance.BodyRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Investment Wallet"
+                android:textColor="@color/text_secondary" />
+
+            <ImageView
+                android:id="@+id/ivInvestmentHideToggle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_eye"
+                app:tint="@color/text_secondary"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Investment Content (with investments) -->
+        <LinearLayout
+            android:id="@+id/llInvestmentContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Current Value -->
+            <TextView
+                android:id="@+id/tvInvestmentValue"
+                style="@style/TextAppearance.H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 UGX"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="@dimen/spacing_xs" />
+
+            <!-- Returns -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="@dimen/spacing_xs">
+
+                <ImageView
+                    android:id="@+id/ivReturnIcon"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_arrow_up"
+                    app:tint="@color/success_green" />
+
+                <TextView
+                    android:id="@+id/tvInvestmentReturns"
+                    style="@style/TextAppearance.BodySmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="+0.00"
+                    android:textColor="@color/success_green" />
+
+                <TextView
+                    android:id="@+id/tvInvestmentPercentage"
+                    style="@style/TextAppearance.BodySmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="(0.00%)"
+                    android:textColor="@color/success_green" />
+            </LinearLayout>
+
+            <!-- View Details Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewDetails"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:text="View Details"
+                android:textSize="14sp"
+                android:minHeight="0dp"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/spacing_xs"
+                app:iconSize="18dp"
+                app:iconTint="@color/button_primary_text" />
+        </LinearLayout>
+
+        <!-- Coming Soon Content (no investments) -->
+        <LinearLayout
+            android:id="@+id/llComingSoon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                style="@style/TextAppearance.H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Coming Soon"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:layout_marginBottom="@dimen/spacing_xs" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStartEarning"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:text="Start Earning"
+                android:textSize="14sp"
+                android:enabled="false"
+                android:minHeight="0dp"
+                android:backgroundTint="#2A2A2A" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

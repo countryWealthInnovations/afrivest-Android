@@ -155,69 +155,15 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Wallet Cards Section -->
-            <LinearLayout
-                android:id="@+id/llWalletCardsSection"
+            <!-- Replace both wallet cards with single horizontal card -->
+            <include
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:id="@+id/walletCardHorizontal"
+                layout="@layout/item_wallet_card_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/spacing_lg">
-
-                <!-- UGX Wallet Cards -->
-                <LinearLayout
-                    android:id="@+id/llUgxWallets"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <!-- Deposit Wallet Card -->
-                    <include
-                        android:id="@+id/depositWalletCard"
-                        layout="@layout/item_wallet_card"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp" />
-
-                    <!-- Interest Wallet Card -->
-                    <include
-                        android:id="@+id/interestWalletCard"
-                        layout="@layout/item_wallet_card"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp" />
-                </LinearLayout>
-
-                <!-- Show/Hide Other Currencies Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnToggleOtherCurrencies"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/button_height"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:text="Show Other Currencies"
-                    android:textColor="@color/primary_gold"
-                    android:backgroundTint="#3A3A3A"
-                    app:cornerRadius="@dimen/radius_medium"
-                    app:icon="@drawable/ic_chevron_down"
-                    app:iconGravity="textEnd"
-                    app:iconTint="@color/primary_gold"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-                <!-- Other Currency Wallets Container (Initially Hidden) -->
-                <LinearLayout
-                    android:id="@+id/llOtherCurrencies"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:visibility="gone">
-
-                    <!-- Will be populated dynamically with other currency cards -->
-
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="7dp" />
 
             <!-- Quick Actions Section -->
             <LinearLayout

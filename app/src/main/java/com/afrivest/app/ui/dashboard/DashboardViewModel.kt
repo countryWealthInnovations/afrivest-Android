@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.afrivest.app.data.api.InvestmentProduct
 import com.afrivest.app.data.local.SecurePreferences
 import com.afrivest.app.data.model.Dashboard
+import com.afrivest.app.data.model.InvestmentSummary
 import com.afrivest.app.data.model.ProfileData
 import com.afrivest.app.data.model.Resource
 import com.afrivest.app.data.model.Transaction
@@ -170,10 +171,17 @@ class DashboardViewModel @Inject constructor(
     }
 
     /**
-     * Get interest wallet - Always null (unpopulated by default)
+     * Get investment summary from profile
      */
-    fun getInterestWallet(): Wallet? {
-        return null
+    fun getInvestmentSummary(): InvestmentSummary? {
+        return _profile.value?.investmentSummary
+    }
+
+    /**
+     * Check if user has investments
+     */
+    fun hasInvestments(): Boolean {
+        return _profile.value?.investmentSummary?.hasInvestments() ?: false
     }
 
     /**

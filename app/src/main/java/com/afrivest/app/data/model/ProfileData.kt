@@ -27,7 +27,9 @@ data class ProfileData(
     val investmentRiskProfile: String?,
     @SerializedName("created_at")
     val createdAt: String,
-    val wallets: List<Wallet>
+    val wallets: List<Wallet>,
+    @SerializedName("investment_summary")
+    val investmentSummary: InvestmentSummary?
 ) : Parcelable {
 
     fun isDefaultAvatar(): Boolean {
@@ -66,6 +68,31 @@ data class ProfileData(
             updated_at = null
         )
     }
+}
+
+
+@Parcelize
+data class InvestmentSummary(
+    @SerializedName("total_invested")
+    val totalInvested: Double,
+    @SerializedName("current_value")
+    val currentValue: Double,
+    @SerializedName("interest_earned")
+    val interestEarned: Double,
+    @SerializedName("interest_percentage")
+    val interestPercentage: Double,
+    @SerializedName("active_investments_count")
+    val activeInvestmentsCount: Int
+) : Parcelable {
+    fun hasInvestments(): Boolean = activeInvestmentsCount > 0
+
+    fun getFormattedCurrentValue(): String = String.format("%,.2f", currentValue)
+
+    fun getFormattedReturns(): String = String.format("%,.2f", interestEarned)
+
+    fun getFormattedPercentage(): String = String.format("%.2f%%", interestPercentage)
+
+    fun isPositiveReturn(): Boolean = interestEarned >= 0
 }
 
 @Parcelize
