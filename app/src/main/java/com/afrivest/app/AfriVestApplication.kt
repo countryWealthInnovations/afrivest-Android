@@ -5,8 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import com.afrivest.app.utils.Constants
+import com.afrivest.app.utils.CrashlyticsTree
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
+import com.afrivest.app.BuildConfig
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 @HiltAndroidApp
@@ -15,8 +18,11 @@ class AfriVestApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize Timber for logging
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
+        }
 
         // Create notification channels
         createNotificationChannels()

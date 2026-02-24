@@ -26,6 +26,12 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.tvTermsAndConditions.text = null
+        binding.tvTermsAndConditions.movementMethod = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -87,28 +93,35 @@ class RegisterActivity : AppCompatActivity() {
             val privacyStart = fullText.indexOf("Privacy Policy")
             val privacyEnd = privacyStart + "Privacy Policy".length
 
+            // Use WeakReference to avoid leaking Activity via AssistStructure/autofill
+            val activityRef = java.lang.ref.WeakReference(this@RegisterActivity)
+
             val termsClick = object : android.text.style.ClickableSpan() {
                 override fun onClick(widget: android.view.View) {
-                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-                    intent.data = android.net.Uri.parse("https://afrivest.co/terms")
-                    startActivity(intent)
+                    activityRef.get()?.let { ctx ->
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                        intent.data = android.net.Uri.parse("https://afrivest.co/terms")
+                        ctx.startActivity(intent)
+                    }
                 }
                 override fun updateDrawState(ds: android.text.TextPaint) {
                     super.updateDrawState(ds)
-                    ds.color = getColor(R.color.primary_gold)
+                    ds.color = activityRef.get()?.getColor(R.color.primary_gold) ?: ds.color
                     ds.isUnderlineText = true
                 }
             }
 
             val privacyClick = object : android.text.style.ClickableSpan() {
                 override fun onClick(widget: android.view.View) {
-                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-                    intent.data = android.net.Uri.parse("https://afrivest.co/privacy")
-                    startActivity(intent)
+                    activityRef.get()?.let { ctx ->
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                        intent.data = android.net.Uri.parse("https://afrivest.co/privacy")
+                        ctx.startActivity(intent)
+                    }
                 }
                 override fun updateDrawState(ds: android.text.TextPaint) {
                     super.updateDrawState(ds)
-                    ds.color = getColor(R.color.primary_gold)
+                    ds.color = activityRef.get()?.getColor(R.color.primary_gold) ?: ds.color
                     ds.isUnderlineText = true
                 }
             }
@@ -127,6 +140,7 @@ class RegisterActivity : AppCompatActivity() {
 
         // Login Link
         binding.tvLoginLink.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
@@ -242,6 +256,7 @@ class RegisterActivity : AppCompatActivity() {
         // Error
         viewModel.errorMessage.observe(this) { message ->
             message?.let {
+                viewModel.onErrorShown()
                 MaterialAlertDialogBuilder(this)
                     .setTitle("Error")
                     .setMessage(it)
@@ -258,6 +273,7 @@ class RegisterActivity : AppCompatActivity() {
         // Navigate to OTP
         viewModel.navigateToOTP.observe(this) { navigate ->
             if (navigate) {
+                viewModel.onNavigatedToOTP()
                 val intent = Intent(this, OTPActivity::class.java)
                 intent.putExtra("email", viewModel.email.value)
                 intent.putExtra("from", "register")

@@ -30,8 +30,12 @@ class OnboardingAdapter(
     override fun getItemCount(): Int = pages.size
 
     fun updateCurrentPage(page: Int) {
+        val previous = currentPage
         currentPage = page
-        notifyDataSetChanged()
+        if (previous != page) {
+            notifyItemChanged(previous)
+            notifyItemChanged(page)
+        }
     }
 
     inner class OnboardingViewHolder(

@@ -27,6 +27,9 @@ data class AuthResponse(
     val otp_channel: String? = null
 )
 
+data class MessageResponse(
+    val message: String? = null
+)
 data class OTPResponse(
     val otp_sent: Boolean,
     val otp_channel: String,

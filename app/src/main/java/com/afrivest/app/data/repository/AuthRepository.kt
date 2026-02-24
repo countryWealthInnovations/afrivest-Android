@@ -87,7 +87,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun forgotPassword(email: String): Resource<Unit> = withContext(Dispatchers.IO) {
+    suspend fun forgotPassword(email: String): Resource<MessageResponse> = withContext(Dispatchers.IO) {
         try {
             val request = ForgotPasswordRequest(email)
             val response = apiService.forgotPassword(request)
@@ -102,7 +102,7 @@ class AuthRepository @Inject constructor(
         email: String,
         code: String,
         password: String
-    ): Resource<Unit> = withContext(Dispatchers.IO) {
+    ): Resource<MessageResponse> = withContext(Dispatchers.IO) {
         try {
             val request = ResetPasswordRequest(
                 email = email,
@@ -128,7 +128,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun logout(): Resource<Unit> = withContext(Dispatchers.IO) {
+    suspend fun logout(): Resource<MessageResponse> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.logout()
             clearSession()
@@ -143,7 +143,7 @@ class AuthRepository @Inject constructor(
     private fun handleAuthResponse(response: Response<ApiResponse<AuthResponse>>): Resource<AuthResponse> {
         return if (response.isSuccessful) {
             val body = response.body()
-            if (body?.success == true) {
+            if (body?.success == true && body.data != null) {
                 securePreferences.saveAuthToken(body.data.token)
                 securePreferences.saveUserId(body.data.user.id)
                 securePreferences.saveUserEmail(body.data.user.email)
@@ -167,7 +167,7 @@ class AuthRepository @Inject constructor(
     private fun <T> handleResponse(response: Response<ApiResponse<T>>): Resource<T> {
         return if (response.isSuccessful) {
             val body = response.body()
-            if (body?.success == true) {
+            if (body?.success == true && body.data != null) {
                 Resource.Success(body.data)
             } else {
                 Resource.Error(body?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)

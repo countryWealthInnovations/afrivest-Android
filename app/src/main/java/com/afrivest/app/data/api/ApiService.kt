@@ -24,7 +24,7 @@ interface ApiService {
     ): Response<ApiResponse<AuthResponse>>
 
     @POST(Constants.Endpoints.LOGOUT)
-    suspend fun logout(): Response<ApiResponse<Unit>>
+    suspend fun logout(): Response<ApiResponse<MessageResponse>>
 
     @GET(Constants.Endpoints.ME)
     suspend fun getCurrentUser(): Response<ApiResponse<User>>
@@ -40,12 +40,12 @@ interface ApiService {
     @POST(Constants.Endpoints.FORGOT_PASSWORD)
     suspend fun forgotPassword(
         @Body request: ForgotPasswordRequest
-    ): Response<ApiResponse<Unit>>
+    ): Response<ApiResponse<MessageResponse>>
 
     @POST(Constants.Endpoints.RESET_PASSWORD)
     suspend fun resetPassword(
         @Body request: ResetPasswordRequest
-    ): Response<ApiResponse<Unit>>
+    ): Response<ApiResponse<MessageResponse>>
 
 
     // ==================== PROFILE ====================

@@ -23,6 +23,7 @@ class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
     private val viewModel: SplashViewModel by viewModels()
+    private val animators = mutableListOf<ObjectAnimator>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,19 +55,19 @@ class SplashActivity : AppCompatActivity() {
         binding.tvFooter.alpha = 0f
 
         // Animate money bag
-        ObjectAnimator.ofFloat(binding.ivMoneyBag, "scaleX", 0.8f, 1.0f).apply {
+        animators += ObjectAnimator.ofFloat(binding.ivMoneyBag, "scaleX", 0.8f, 1.0f).apply {
             duration = 600
             interpolator = AccelerateDecelerateInterpolator()
             start()
         }
 
-        ObjectAnimator.ofFloat(binding.ivMoneyBag, "scaleY", 0.8f, 1.0f).apply {
+        animators += ObjectAnimator.ofFloat(binding.ivMoneyBag, "scaleY", 0.8f, 1.0f).apply {
             duration = 600
             interpolator = AccelerateDecelerateInterpolator()
             start()
         }
 
-        ObjectAnimator.ofFloat(binding.ivMoneyBag, "alpha", 0f, 1f).apply {
+        animators += ObjectAnimator.ofFloat(binding.ivMoneyBag, "alpha", 0f, 1f).apply {
             duration = 600
             start()
         }
@@ -74,7 +75,7 @@ class SplashActivity : AppCompatActivity() {
         // Animate app name
         lifecycleScope.launch {
             delay(300)
-            ObjectAnimator.ofFloat(binding.tvAppName, "alpha", 0f, 1f).apply {
+            animators += ObjectAnimator.ofFloat(binding.tvAppName, "alpha", 0f, 1f).apply {
                 duration = 500
                 start()
             }
@@ -83,7 +84,7 @@ class SplashActivity : AppCompatActivity() {
         // Animate footer
         lifecycleScope.launch {
             delay(500)
-            ObjectAnimator.ofFloat(binding.tvFooter, "alpha", 0f, 1f).apply {
+            animators += ObjectAnimator.ofFloat(binding.tvFooter, "alpha", 0f, 1f).apply {
                 duration = 500
                 start()
             }
@@ -124,5 +125,11 @@ class SplashActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        animators.forEach { it.cancel() }
+        animators.clear()
     }
 }

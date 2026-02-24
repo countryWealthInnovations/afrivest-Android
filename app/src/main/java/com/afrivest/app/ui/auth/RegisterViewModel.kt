@@ -70,11 +70,19 @@ class RegisterViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+    fun onErrorShown() {
+        _errorMessage.value = null
+    }
+
     private val _isFormValid = MutableLiveData(false)
     val isFormValid: LiveData<Boolean> = _isFormValid
 
     private val _navigateToOTP = MutableLiveData(false)
     val navigateToOTP: LiveData<Boolean> = _navigateToOTP
+
+    fun onNavigatedToOTP() {
+        _navigateToOTP.value = false
+    }
 
     // Field State Sealed Class
     sealed class FieldState {

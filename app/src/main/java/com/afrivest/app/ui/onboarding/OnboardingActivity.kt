@@ -22,6 +22,7 @@ class OnboardingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var autoSlideRunnable: Runnable? = null
     private val AUTO_SLIDE_DELAY = 5000L // 5 seconds
+    private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +71,10 @@ class OnboardingActivity : AppCompatActivity() {
         )
 
         binding.viewPager.adapter = adapter
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 adapter.updateCurrentPage(position)
-
-                // Restart auto-slide timer when page changes
                 stopAutoSlide()
                 if (position < pages.size - 1) {
                     startAutoSlide()
@@ -84,7 +83,6 @@ class OnboardingActivity : AppCompatActivity() {
 
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
-                // Pause auto-slide when user is manually swiping
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
                     stopAutoSlide()
                 } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
@@ -94,7 +92,8 @@ class OnboardingActivity : AppCompatActivity() {
                     }
                 }
             }
-        })
+        }
+        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback!!)
     }
 
     private fun startAutoSlide() {
@@ -150,6 +149,9 @@ class OnboardingActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopAutoSlide()
+        pageChangeCallback?.let { binding.viewPager.unregisterOnPageChangeCallback(it) }
+        pageChangeCallback = null
+        handler.removeCallbacksAndMessages(null)
     }
 }
 
