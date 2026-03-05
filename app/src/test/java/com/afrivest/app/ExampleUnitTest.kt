@@ -1,4 +1,4 @@
-package com.afrivest.app
+package co.afrivest
 
 import org.junit.Test
 

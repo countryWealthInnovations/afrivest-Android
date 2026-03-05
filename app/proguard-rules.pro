@@ -43,12 +43,12 @@
 
 # ==================== App Data Models ====================
 # Keep repositories and generic wrappers
--keep class com.afrivest.app.data.repository.** { *; }
--keep class com.afrivest.app.core.** { *; }
+-keep class co.afrivest.data.repository.** { *; }
+-keep class co.afrivest.core.** { *; }
 # Keep ALL classes in data packages — covers any new models added in the future
--keep class com.afrivest.app.data.model.** { *; }
--keep class com.afrivest.app.data.api.** { *; }
--keep class com.afrivest.app.data.local.** { *; }
+-keep class co.afrivest.data.model.** { *; }
+-keep class co.afrivest.data.api.** { *; }
+-keep class co.afrivest.data.local.** { *; }
 
 # ==================== Kotlin ====================
 # TEMP: disable optimization to confirm R8 cause

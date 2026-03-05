@@ -9,14 +9,14 @@ plugins {
 }
 
 android {
-    namespace = "com.afrivest.app"
+    namespace = "co.afrivest"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.afrivest.app"
+        applicationId = "co.afrivest"
         minSdk = 24
         targetSdk = 35
-        versionCode = 4
+        versionCode = 2
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

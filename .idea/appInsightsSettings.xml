@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.ikowapi.passenger" />
+                  <option name="appId" value="co.mono.pilot" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
@@ -22,8 +22,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.afrivest.app" />
-                  <option name="mobileSdkAppId" value="1:517362311917:android:d95109dad78b07b2a862e4" />
+                  <option name="appId" value="co.afrivest" />
+                  <option name="mobileSdkAppId" value="1:517362311917:android:c02c0cf90263b4fea862e4" />
                   <option name="projectId" value="afrivest-57eb6" />
                   <option name="projectNumber" value="517362311917" />
                 </ConnectionSetting>

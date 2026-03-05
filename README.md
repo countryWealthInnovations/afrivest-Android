@@ -223,7 +223,7 @@ sdk.dir=/path/to/your/Android/sdk
 
 1. Download `google-services.json` from Firebase Console
 2. Place it in the `app/` directory
-3. Ensure the package name matches: `com.afrivest.app`
+3. Ensure the package name matches: `co.afrivest`
 
 ### 4. Open in Android Studio
 

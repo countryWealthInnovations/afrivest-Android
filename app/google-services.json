@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:517362311917:android:d95109dad78b07b2a862e4",
+        "mobilesdk_app_id": "1:517362311917:android:c02c0cf90263b4fea862e4",
         "android_client_info": {
-          "package_name": "com.afrivest.app"
+          "package_name": "co.afrivest"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "517362311917-j5r64omoimkj4h5b3posngs3hfrkfpu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDrv_UTIxG3pm7ax2et-3oS4CwnlT7tdwo"
@@ -20,7 +25,55 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517362311917-j5r64omoimkj4h5b3posngs3hfrkfpu7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "517362311917-mkh8e05h9c1nhqq2jf4k69q27nrf9trt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.afrivest"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517362311917:android:d95109dad78b07b2a862e4",
+        "android_client_info": {
+          "package_name": "co.afrivest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517362311917-j5r64omoimkj4h5b3posngs3hfrkfpu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrv_UTIxG3pm7ax2et-3oS4CwnlT7tdwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517362311917-j5r64omoimkj4h5b3posngs3hfrkfpu7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "517362311917-mkh8e05h9c1nhqq2jf4k69q27nrf9trt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.afrivest"
+              }
+            }
+          ]
         }
       }
     }
