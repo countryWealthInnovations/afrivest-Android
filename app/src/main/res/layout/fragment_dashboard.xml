@@ -192,12 +192,14 @@
 
             <!-- Hot Investment Opportunities Section -->
             <LinearLayout
+                android:id="@+id/layoutHotInvestments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/spacing_lg">
 
                 <TextView
+                    android:id="@+id/tvHotInvestments"
                     style="@style/TextAppearance.BodyLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

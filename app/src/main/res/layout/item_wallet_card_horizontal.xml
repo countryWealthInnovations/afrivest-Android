@@ -113,7 +113,8 @@
             android:background="@color/primary_gold"
             android:padding="@dimen/spacing_md"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:visibility="gone">
 
             <!-- Left Part: Investment Amount -->
             <LinearLayout

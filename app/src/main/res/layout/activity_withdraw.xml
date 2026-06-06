@@ -31,80 +31,180 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_horizontal">
 
-            <!-- Phone Number Input -->
+            <!-- Payout Method Toggle -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/togglePayoutMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                app:singleSelection="true"
+                app:checkedButton="@id/btnMobileMoney">
+
+                <Button
+                    android:id="@+id/btnMobileMoney"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Mobile Money" />
+
+                <Button
+                    android:id="@+id/btnBankTransfer"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Bank Transfer" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Currency Chips -->
             <TextView
                 style="@style/TextAppearance.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number"
-                android:layout_marginTop="@dimen/spacing_lg" />
+                android:text="Payout Currency"
+                android:layout_marginTop="@dimen/spacing_md" />
 
-            <!-- Phone Number Input Container -->
-            <LinearLayout
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupCurrency"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:orientation="horizontal"
-                android:background="@color/input_background"
-                android:gravity="center_vertical">
+                app:singleSelection="true" />
 
-                <!-- Uganda Flag and Code (hardcoded) -->
-                <LinearLayout
+            <!-- Network Picker (mobile money only) -->
+            <LinearLayout
+                android:id="@+id/layoutNetworkPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_md">
+
+                <TextView
+                    style="@style/TextAppearance.Label"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/spacing_md">
+                    android:layout_height="wrap_content"
+                    android:text="Network" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇺🇬"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        style="@style/TextAppearance.BodyLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="+256"
-                        android:textColor="@color/text_primary" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="24dp"
-                    android:background="@color/border_default" />
-
-                <EditText
-                    android:id="@+id/editTextPhone"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:paddingStart="@dimen/spacing_sm"
-                    android:paddingEnd="@dimen/spacing_md"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_body_large"
-                    android:inputType="phone"
-                    android:maxLength="9"
-                    android:hint="700000001"
-                    android:textColorHint="@color/text_placeholder" />
-
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupNetwork"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:singleSelection="true" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvPhoneHelper"
-                android:layout_width="wrap_content"
+            <!-- Mobile Money Fields -->
+            <LinearLayout
+                android:id="@+id/layoutMobileMoney"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MTN: 77, 78, 76, 79 | Airtel: 70, 74, 75"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="@dimen/spacing_xs" />
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_md">
+
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:orientation="horizontal"
+                    android:background="@color/input_background"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvCountryCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/spacing_md"
+                        android:text="+256"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_body_large" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:background="@color/border_default" />
+
+                    <EditText
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/spacing_sm"
+                        android:paddingEnd="@dimen/spacing_md"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_body_large"
+                        android:inputType="phone"
+                        android:hint="700000001"
+                        android:textColorHint="@color/text_placeholder" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPhoneHelper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter phone number"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="@dimen/spacing_xs" />
+            </LinearLayout>
+
+            <!-- Bank Transfer Fields -->
+            <LinearLayout
+                android:id="@+id/layoutBankTransfer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bank Code"
+                    android:layout_marginBottom="@dimen/spacing_md">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextBankCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Account Number"
+                    android:layout_marginBottom="@dimen/spacing_md">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextAccountNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Account Name">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextAccountName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <!-- Amount Input -->
             <TextView
+                android:id="@+id/tvAmountLabel"
                 style="@style/TextAppearance.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -122,27 +222,26 @@
                     style="@style/Widget.App.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter amount (min 10,000)"
+                    android:hint="Enter amount"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Fee Display Section -->
             <LinearLayout
+                android:id="@+id/feeSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_md"
                 android:background="@color/input_background"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:visibility="gone"
-                android:id="@+id/feeSection">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="@dimen/spacing_sm">
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -150,7 +249,6 @@
                         android:text="Amount"
                         style="@style/TextAppearance.BodyRegular"
                         android:textColor="@color/text_secondary" />
-
                     <TextView
                         android:id="@+id/tvWithdrawAmount"
                         android:layout_width="wrap_content"
@@ -164,17 +262,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="@dimen/spacing_sm">
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Fee"
+                        android:text="Transaction fee"
                         style="@style/TextAppearance.BodyRegular"
                         android:textColor="@color/text_secondary" />
-
                     <TextView
-                        android:id="@+id/tvFeeAmount"
+                        android:id="@+id/tvTransactionFeeAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/TextAppearance.BodyRegular"
@@ -186,15 +282,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="@dimen/spacing_sm">
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Total Amount"
+                        android:text="Total Debited"
                         style="@style/TextAppearance.BodyLarge"
                         android:textColor="@color/text_primary" />
-
                     <TextView
                         android:id="@+id/tvTotalAmount"
                         android:layout_width="wrap_content"
@@ -206,16 +300,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/spacing_xs">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Balance After Withdrawal"
+                        android:text="Balance After"
                         style="@style/TextAppearance.BodyRegular"
                         android:textColor="@color/text_secondary" />
-
                     <TextView
                         android:id="@+id/tvBalanceAfter"
                         android:layout_width="wrap_content"
@@ -223,6 +316,14 @@
                         style="@style/TextAppearance.BodyRegular"
                         android:textColor="@color/success_green" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFeeNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="* Estimated — confirmed on submit"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <!-- Error Message -->
@@ -252,19 +353,15 @@
                     app:tint="@color/text_secondary" />
 
                 <TextView
+                    android:id="@+id/tvWithdrawInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/spacing_sm"
-                    android:text="Funds will be sent to your mobile money account within 5 minutes"
+                    android:text="Funds will be sent within 5 minutes"
                     android:textSize="12sp"
                     android:textColor="@color/text_secondary" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <!-- Progress Bar -->
             <ProgressBar
@@ -272,7 +369,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/spacing_md"
+                android:layout_marginTop="@dimen/spacing_md"
                 android:visibility="gone" />
 
             <!-- Withdraw Button -->
@@ -283,6 +380,7 @@
                 android:layout_height="@dimen/button_height"
                 android:text="Withdraw"
                 android:enabled="false"
+                android:layout_marginTop="@dimen/spacing_md"
                 android:layout_marginBottom="@dimen/spacing_lg" />
         </LinearLayout>
     </ScrollView>
