@@ -245,7 +245,8 @@ class ProductDetailActivity : BaseActivity() {
             Toast.makeText(this, "Amount must be at least ${product?.min_investment_formatted}", Toast.LENGTH_SHORT).show()
             return
         }
-        viewModel.purchaseProduct(product?.id ?: return, amount, product?.currency ?: "UGX", binding.switchAutoReinvest.isChecked)
+        val productCurrency = product?.currency ?: "UGX"
+        viewModel.startPurchase(product?.id ?: return, amount, productCurrency, binding.switchAutoReinvest.isChecked)
     }
 
     private fun setupObservers() {
@@ -267,12 +268,41 @@ class ProductDetailActivity : BaseActivity() {
             }
         }
 
+        viewModel.agreementToShow.observe(this) { agreement ->
+            agreement?.let { showAgreementDialog(it.title, it.body) }
+        }
+
         viewModel.errorMessage.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                 viewModel.clearError()
             }
         }
+    }
+
+    private fun showAgreementDialog(title: String, body: String) {
+        val scroll = android.widget.ScrollView(this)
+        val tv = TextView(this).apply {
+            text = body
+            setTextColor(getColor(R.color.text_secondary))
+            setPadding(48, 24, 48, 24)
+            textSize = 14f
+        }
+        scroll.addView(tv)
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setView(scroll)
+            .setPositiveButton("Accept") { d, _ ->
+                d.dismiss()
+                viewModel.acceptAgreementAndContinue()
+            }
+            .setNegativeButton("Cancel") { d, _ ->
+                d.dismiss()
+                viewModel.dismissAgreement()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     override fun onSupportNavigateUp(): Boolean {

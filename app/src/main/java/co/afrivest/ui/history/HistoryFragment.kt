@@ -86,42 +86,40 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupFilterChips() {
-        // All filter
         binding.chipAll.setOnClickListener {
             selectChip(binding.chipAll)
             viewModel.filterTransactions(null)
         }
-
-        // Success filter
-        binding.chipSuccess.setOnClickListener {
-            selectChip(binding.chipSuccess)
-            viewModel.filterTransactions("success")
+        binding.chipDeposits.setOnClickListener {
+            selectChip(binding.chipDeposits)
+            viewModel.filterTransactions("deposit")
         }
-
-        // Pending filter
-        binding.chipPending.setOnClickListener {
-            selectChip(binding.chipPending)
-            viewModel.filterTransactions("pending")
+        binding.chipWithdrawals.setOnClickListener {
+            selectChip(binding.chipWithdrawals)
+            viewModel.filterTransactions("withdrawal")
         }
-
-        // Failed filter
-        binding.chipFailed.setOnClickListener {
-            selectChip(binding.chipFailed)
-            viewModel.filterTransactions("failed")
+        binding.chipSent.setOnClickListener {
+            selectChip(binding.chipSent)
+            viewModel.filterTransactions("transfer")
         }
-
-        // Select "All" by default
+        binding.chipInvestments.setOnClickListener {
+            selectChip(binding.chipInvestments)
+            viewModel.filterTransactions("investment")
+        }
+        binding.chipLoans.setOnClickListener {
+            selectChip(binding.chipLoans)
+            viewModel.filterTransactions("loan_repayment")
+        }
         selectChip(binding.chipAll)
     }
 
     private fun selectChip(selectedChip: Chip) {
-        // Deselect all chips
         binding.chipAll.isChecked = false
-        binding.chipSuccess.isChecked = false
-        binding.chipPending.isChecked = false
-        binding.chipFailed.isChecked = false
-
-        // Select the clicked chip
+        binding.chipDeposits.isChecked = false
+        binding.chipWithdrawals.isChecked = false
+        binding.chipSent.isChecked = false
+        binding.chipInvestments.isChecked = false
+        binding.chipLoans.isChecked = false
         selectedChip.isChecked = true
     }
 

@@ -1,4 +1,4 @@
-package co.afrivest.ui.dashboard.adapters
+package co.afrivest.ui.home.adapters
 
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -12,7 +12,9 @@ import co.afrivest.R
 data class Contact(
     val name: String,
     val initials: String,
-    val color: Int
+    val color: Int,
+    val userId: Int? = null,
+    val uuid: String? = null
 )
 
 class ContactsAdapter(

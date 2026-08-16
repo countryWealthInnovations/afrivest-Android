@@ -43,7 +43,7 @@ class DepositProcessingActivity : BaseActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        // Allow back press to go to dashboard
+        // Allow back press to go to home
         navigateToDashboard()
     }
 }

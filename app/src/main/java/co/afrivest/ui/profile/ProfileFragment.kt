@@ -42,6 +42,9 @@ class ProfileFragment : Fragment() {
     @Inject
     lateinit var preferencesManager: co.afrivest.data.local.PreferencesManager
 
+    @Inject
+    lateinit var loanRepository: co.afrivest.data.repository.LoanRepository
+
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
@@ -139,6 +142,23 @@ class ProfileFragment : Fragment() {
                 startActivity(Intent(requireContext(), co.afrivest.ui.onboarding.CurrencySelectionActivity::class.java))
             }
         }
+        with(binding.rowAllocation) {
+            ivIcon.setImageResource(R.drawable.ic_chart)
+            tvTitle.text = "Deposit Allocation"
+            tvSubtitle.text = "Split each deposit across wallet, savings, investment"
+            root.setOnClickListener {
+                startActivity(Intent(requireContext(), co.afrivest.ui.allocation.AllocationSettingsActivity::class.java))
+            }
+        }
+
+        with(binding.rowNextOfKin) {
+            ivIcon.setImageResource(R.drawable.ic_user_placeholder)
+            tvTitle.text = "Next of Kin"
+            tvSubtitle.text = "Who to contact in an emergency"
+            root.setOnClickListener {
+                startActivity(Intent(requireContext(), co.afrivest.ui.profile.NextOfKinActivity::class.java))
+            }
+        }
 
         // Configure Security Section Rows
         with(binding.rowChangePassword) {
@@ -192,6 +212,16 @@ class ProfileFragment : Fragment() {
                 // Set initials avatar
                 val initials = getInitials(it.name)
                 binding.tvInitials.text = initials
+
+                renderStatus(it)
+                if (it.role.equals("advisor", true)) {
+                    binding.cardAdvisor.visible()
+                    binding.btnAdvisorDashboard.setOnClickListener {
+                        startActivity(Intent(requireContext(), co.afrivest.ui.advisors.AdvisorDashboardActivity::class.java))
+                    }
+                } else {
+                    binding.cardAdvisor.gone()
+                }
             }
         }
 
@@ -271,6 +301,99 @@ class ProfileFragment : Fragment() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    private fun renderStatus(user: co.afrivest.data.model.User) {
+        val profile = securePreferences.getCachedProfile()
+        renderSummary(profile)
+
+        applyStatusRow(
+            binding.rowStatusEmail, "Email", user.email_verified,
+            verifiedText = "Verified", pendingText = "Not verified"
+        )
+
+        val phoneVerified = securePreferences.isPhoneVerified()
+        applyStatusRow(
+            binding.rowStatusPhone, "Phone", phoneVerified,
+            verifiedText = "Verified", pendingText = "Verify now"
+        )
+        binding.rowStatusPhone.root.setOnClickListener {
+            if (!phoneVerified) {
+                startActivity(
+                    Intent(requireContext(), co.afrivest.ui.auth.PhoneOTPActivity::class.java)
+                        .putExtra("phone", user.phone_number)
+                )
+            }
+        }
+
+        val kycVerified = user.kyc_verified || (profile?.kycVerified == true)
+        applyStatusRow(
+            binding.rowStatusKyc, "Identity (KYC)", kycVerified,
+            verifiedText = "Verified", pendingText = "Verify now"
+        )
+        binding.rowStatusKyc.root.setOnClickListener {
+            if (!kycVerified) {
+                startActivity(Intent(requireContext(), co.afrivest.ui.kyc.KycActivity::class.java))
+            }
+        }
+
+        applyStatusRow(
+            binding.rowStatusAccount, "Account",
+            user.status.equals("active", true),
+            verifiedText = "Active", pendingText = user.status.replaceFirstChar { it.uppercase() }
+        )
+    }
+
+    private fun renderSummary(profile: co.afrivest.data.model.ProfileData?) {
+        val currency = preferencesManager.defaultCurrency ?: "UGX"
+        val walletBalance = profile?.wallets?.firstOrNull { it.currency == currency }?.balance
+            ?: profile?.wallets?.firstOrNull()?.balance ?: "0"
+        binding.tvSummaryWallet.text = "$currency $walletBalance"
+
+        val portfolio = profile?.investmentSummary?.currentValue ?: 0.0
+        binding.tvSummaryPortfolio.text = String.format("%,.0f", portfolio)
+
+        binding.tvSummaryLoan.text = "…"
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val r = loanRepository.getMyLoans()) {
+                is co.afrivest.data.model.Resource.Success -> {
+                    val borrowed = r.data?.borrowed ?: emptyList()
+                    val active = borrowed.filter { it.status in listOf("active", "funded", "overdue") }
+                    val userCurrency = preferencesManager.defaultCurrency ?: "UGX"
+                    var total = 0.0
+                    for (l in active) {
+                        val raw = (l.outstanding as? Number)?.toDouble()
+                            ?: (l.outstanding as? String)?.toDoubleOrNull()
+                            ?: 0.0
+                        total += co.afrivest.utils.FeeCalculator.convertCurrency(
+                            raw, from = l.currency ?: userCurrency, to = userCurrency,
+                            preferencesManager = preferencesManager
+                        )
+                    }
+                    binding.tvSummaryLoan.text = if (total > 0.0) "$userCurrency ${String.format("%,.0f", total)}" else "None"
+                }
+                is co.afrivest.data.model.Resource.Error -> binding.tvSummaryLoan.text = "None"
+                is co.afrivest.data.model.Resource.Loading -> {}
+            }
+        }
+    }
+
+    private fun applyStatusRow(
+        row: co.afrivest.databinding.ItemStatusRowBinding,
+        label: String,
+        ok: Boolean,
+        verifiedText: String,
+        pendingText: String
+    ) {
+        row.tvStatusLabel.text = label
+        row.tvStatusValue.text = if (ok) verifiedText else pendingText
+        val color = if (ok) android.graphics.Color.parseColor("#10b981")
+                    else android.graphics.Color.parseColor("#EFBF04")
+        row.tvStatusValue.setTextColor(color)
+        row.ivStatusIcon.setImageResource(
+            if (ok) R.drawable.ic_check_circle else R.drawable.ic_shield
+        )
+        row.ivStatusIcon.setColorFilter(color)
     }
 
     private fun getInitials(name: String): String {

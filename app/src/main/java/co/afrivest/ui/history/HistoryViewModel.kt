@@ -58,15 +58,16 @@ class HistoryViewModel @Inject constructor(
             when (val result = transactionRepository.getTransactions(
                 page = currentPage,
                 perPage = 20,
-                status = currentFilter
+                type = currentFilter
             )) {
                 is Resource.Success -> {
                     result.data?.let { transactions ->
                         allTransactions.addAll(transactions)
                     }
-
-                    // Load investment purchases
-                    loadInvestmentPurchases()
+                    // Merge local investment purchases only on the All tab
+                    if (currentFilter == null) {
+                        loadInvestmentPurchases()
+                    }
 
                     _transactions.value = allTransactions.sortedByDescending {
                         parseDate(it.created_at)
@@ -102,7 +103,7 @@ class HistoryViewModel @Inject constructor(
             when (val result = transactionRepository.getTransactions(
                 page = currentPage,
                 perPage = 20,
-                status = currentFilter
+                type = currentFilter
             )) {
                 is Resource.Success -> {
                     if (result.data!!.isEmpty()) {

@@ -1,4 +1,4 @@
-package co.afrivest.ui.dashboard.adapters
+package co.afrivest.ui.home.adapters
 
 import android.view.LayoutInflater
 import android.view.View

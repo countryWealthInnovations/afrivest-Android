@@ -2,20 +2,16 @@ package co.afrivest.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import co.afrivest.R
 import co.afrivest.databinding.ActivityMainBinding
-import co.afrivest.ui.dashboard.DashboardFragment
+import co.afrivest.ui.home.HomeFragment
 import co.afrivest.ui.assets.AssetsFragment
 import co.afrivest.ui.history.HistoryFragment
 import co.afrivest.ui.profile.ProfileFragment
-import co.afrivest.ui.transfer.SendMoneyActivity
 import co.afrivest.data.local.PreferencesManager
 import co.afrivest.ui.base.BaseActivity
 import co.afrivest.ui.onboarding.CurrencySelectionActivity
-import co.afrivest.ui.transfer.WithdrawActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -55,7 +51,7 @@ class MainActivity : BaseActivity() {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            loadFragment(DashboardFragment())
+            loadFragment(HomeFragment())
         }
     }
 
@@ -63,7 +59,7 @@ class MainActivity : BaseActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    loadFragment(DashboardFragment())
+                    loadFragment(HomeFragment())
                     true
                 }
                 R.id.nav_assets -> {

@@ -129,6 +129,14 @@ class SecurePreferences(context: Context) {
         return regularPrefs.getBoolean("email_verified", false)
     }
 
+    fun setPhoneVerified(verified: Boolean) {
+        regularPrefs.edit().putBoolean("phone_verified", verified).apply()
+    }
+
+    fun isPhoneVerified(): Boolean {
+        return regularPrefs.getBoolean("phone_verified", false)
+    }
+
     fun setKYCVerified(verified: Boolean) {
         regularPrefs.edit().putBoolean("kyc_verified", verified).apply()
     }

@@ -5,6 +5,8 @@ import co.afrivest.data.api.DepositResponse
 import co.afrivest.data.api.MobileMoneyDepositRequest
 import co.afrivest.data.api.TransactionStatus
 import co.afrivest.data.api.CardDepositRequest
+import co.afrivest.data.api.BankDepositRequest
+import co.afrivest.data.api.BankDepositApiResponse
 import co.afrivest.data.local.SecurePreferences
 import co.afrivest.data.model.*
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +55,8 @@ class DepositRepository @Inject constructor(
         }
     }
 
+
+
     suspend fun depositCard(
         amount: Double,
         currency: String,
@@ -88,6 +92,49 @@ class DepositRepository @Inject constructor(
             } catch (e: Exception) {
                 Resource.Error(e.message ?: "Network error occurred")
             }
+        }
+    }
+
+    suspend fun depositBank(
+        amount: Double,
+        currency: String,
+        type: String
+    ): Resource<BankDepositApiResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val request = BankDepositRequest(
+                    amount = amount,
+                    currency = currency,
+                    type = type
+                )
+                val response = apiService.depositBank(request)
+                if (response.isSuccessful && response.body() != null) {
+                    val apiResponse = response.body()!!
+                    if (apiResponse.success) {
+                        Resource.Success(apiResponse.data)
+                    } else {
+                        Resource.Error(apiResponse.message ?: "Bank deposit failed")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Resource.Error(parseFriendlyErrorMessage(errorBody))
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Network error occurred")
+            }
+        }
+    }
+
+    private fun parseFriendlyErrorMessage(errorBody: String?): String {
+        if (errorBody.isNullOrBlank()) return "Something went wrong. Please try again."
+        return try {
+            val json = org.json.JSONObject(errorBody)
+            val errorObj = json.optJSONObject("error")
+            errorObj?.optString("message")?.takeIf { it.isNotBlank() }
+                ?: json.optString("message").takeIf { it.isNotBlank() }
+                ?: "Something went wrong. Please try again."
+        } catch (e: Exception) {
+            "Something went wrong. Please try again."
         }
     }
 

@@ -1,4 +1,4 @@
-package co.afrivest.ui.dashboard
+package co.afrivest.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.afrivest.data.api.InvestmentProduct
 import co.afrivest.data.local.SecurePreferences
-import co.afrivest.data.model.Dashboard
 import co.afrivest.data.model.InvestmentSummary
 import co.afrivest.data.model.ProfileData
 import co.afrivest.data.model.Resource
@@ -22,7 +21,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val walletRepository: WalletRepository,
     private val profileRepository: ProfileRepository,
     private val investmentRepository: InvestmentRepository,
@@ -47,6 +46,9 @@ class DashboardViewModel @Inject constructor(
 
     private val _featuredInvestments = MutableLiveData<List<InvestmentProduct>>()
     val featuredInvestments: LiveData<List<InvestmentProduct>> = _featuredInvestments
+
+    private val _matchedContacts = MutableLiveData<List<co.afrivest.ui.home.adapters.Contact>>()
+    val matchedContacts: LiveData<List<co.afrivest.ui.home.adapters.Contact>> = _matchedContacts
 
     private val _recentTransactions = MutableLiveData<List<Transaction>>()
     val recentTransactions: LiveData<List<Transaction>> = _recentTransactions
@@ -229,11 +231,52 @@ class DashboardViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
+    /**
+     * Look up which of the given phone contacts are AfriVest users.
+     * phones/emails read from the device by the Fragment (needs permission).
+     */
+    fun lookupContacts(phones: List<String>, emails: List<String>) {
+        if (phones.isEmpty() && emails.isEmpty()) {
+            _matchedContacts.value = emptyList()
+            return
+        }
+        viewModelScope.launch {
+            when (val result = profileRepository.lookupContacts(phones, emails)) {
+                is Resource.Success -> {
+                    val palette = listOf(
+                        android.graphics.Color.parseColor("#2196F3"),
+                        android.graphics.Color.parseColor("#FF9800"),
+                        android.graphics.Color.parseColor("#4CAF50"),
+                        android.graphics.Color.parseColor("#E91E63"),
+                        android.graphics.Color.parseColor("#F44336"),
+                        android.graphics.Color.parseColor("#9C27B0")
+                    )
+                    val matched = (result.data ?: emptyList()).mapIndexed { i, c ->
+                        co.afrivest.ui.home.adapters.Contact(
+                            name = c.name,
+                            initials = c.name.split(" ").mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString(""),
+                            color = palette[i % palette.size],
+                            userId = c.user_id,
+                            uuid = c.uuid
+                        )
+                    }
+                    _matchedContacts.value = matched
+                    timber.log.Timber.d("✅ Matched ${matched.size} AfriVest contacts")
+                }
+                is Resource.Error -> {
+                    _matchedContacts.value = emptyList()
+                    timber.log.Timber.e("❌ Contact lookup failed: ${result.message}")
+                }
+                is Resource.Loading -> {}
+            }
+        }
+    }
+
     private fun loadFeaturedInvestments() {
         viewModelScope.launch {
             when (val result = investmentRepository.getFeaturedProducts()) {
                 is Resource.Success -> {
-                    _featuredInvestments.value = result.data?.take(3) ?: emptyList()
+                    _featuredInvestments.value = result.data?.take(10) ?: emptyList()
                     timber.log.Timber.d("✅ Loaded featured investments")
                 }
                 is Resource.Error -> {

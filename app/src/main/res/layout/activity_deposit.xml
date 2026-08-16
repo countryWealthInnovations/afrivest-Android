@@ -31,125 +31,154 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_horizontal">
 
-        <!-- Payment Method Selector -->
-        <TextView
-            style="@style/TextAppearance.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payment Method"
-            android:layout_marginTop="@dimen/spacing_lg" />
-
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/togglePaymentMethod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
-            app:singleSelection="true"
-            app:selectionRequired="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMobileMoney"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:text="Mobile Money"
-                android:textColor="@color/text_primary"
-                app:strokeColor="@color/primary_gold"
-                android:checked="true" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCard"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:text="Card Deposit"
-                android:textColor="@color/text_primary"
-                app:strokeColor="@color/primary_gold" />
-
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        <LinearLayout
-            android:id="@+id/layoutMobileMoney"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <!-- Phone Number Input -->
+            <!-- Payment Method Selector -->
             <TextView
                 style="@style/TextAppearance.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number"
-                android:layout_marginTop="@dimen/spacing_md" />
+                android:text="Payment Method"
+                android:layout_marginTop="@dimen/spacing_lg" />
 
-            <!-- Phone Number Input Container -->
-            <LinearLayout
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/togglePaymentMethod"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:orientation="horizontal"
-                android:background="@color/input_background"
-                android:gravity="center_vertical">
+                app:singleSelection="true"
+                app:selectionRequired="true">
 
-                <!-- Uganda Flag and Code (hardcoded) -->
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMobileMoney"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:text="Mobile Money"
+                    android:textColor="@color/text_primary"
+                    app:strokeColor="@color/primary_gold"
+                    android:checked="true" />
+
+                <!-- Card deposit temporarily disabled
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCard"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:text="Card"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_primary"
+                    app:strokeColor="@color/primary_gold" />
+                -->
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBank"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:text="Bank"
+                    android:textColor="@color/text_primary"
+                    app:strokeColor="@color/primary_gold" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <LinearLayout
+                android:id="@+id/layoutMobileMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!-- Currency Picker -->
+                <TextView
+                    style="@style/TextAppearance.Label"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Deposit Currency"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupDepositCurrency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:singleSelection="true" />
+
+                <!-- Network Picker -->
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Network"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupDepositNetwork"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:singleSelection="true" />
+
+                <!-- Phone Number Input -->
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <!-- Phone Number Input Container -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/spacing_md">
+                    android:background="@color/input_background"
+                    android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇺🇬"
-                        android:textSize="20sp" />
-
-                    <TextView
+                        android:id="@+id/tvCountryCode"
                         style="@style/TextAppearance.BodyLarge"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/spacing_md"
                         android:text="+256"
                         android:textColor="@color/text_primary" />
 
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:background="@color/border_default" />
+
+                    <EditText
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingStart="@dimen/spacing_sm"
+                        android:paddingEnd="@dimen/spacing_md"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_body_large"
+                        android:inputType="phone"
+                        android:maxLength="15"
+                        android:hint="700000001"
+                        android:textColorHint="@color/text_placeholder" />
+
                 </LinearLayout>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="24dp"
-                    android:background="@color/border_default" />
-
-                <EditText
-                    android:id="@+id/editTextPhone"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:paddingStart="@dimen/spacing_sm"
-                    android:paddingEnd="@dimen/spacing_md"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_body_large"
-                    android:inputType="phone"
-                    android:maxLength="9"
-                    android:hint="700000001"
-                    android:textColorHint="@color/text_placeholder" />
+                <TextView
+                    android:id="@+id/tvPhoneHelperDeposit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MTN: 77, 78, 76, 79 | Airtel: 70, 74, 75"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="@dimen/spacing_xs" />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvPhoneHelperDeposit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MTN: 77, 78, 76, 79 | Airtel: 70, 74, 75"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="@dimen/spacing_xs" />
-
-        </LinearLayout>
 
             <!-- Card Section -->
             <LinearLayout
@@ -158,6 +187,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
+                <!-- Card Currency Picker -->
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Card Currency"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupCardCurrency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:singleSelection="true" />
 
                 <!-- Card Number -->
                 <TextView
@@ -287,8 +331,112 @@
 
             </LinearLayout>
 
+            <!-- Bank Section (merged: Virtual Account + Internet Banking) -->
+            <LinearLayout
+                android:id="@+id/layoutBank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextAppearance.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Method"
+                    android:layout_marginTop="@dimen/spacing_md" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleBankSubMethod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnVirtualAccount"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:text="Virtual Account"
+                        android:textColor="@color/text_primary"
+                        app:strokeColor="@color/primary_gold"
+                        android:checked="true" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnInternetBanking"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:text="Internet Banking"
+                        android:textColor="@color/text_primary"
+                        app:strokeColor="@color/primary_gold" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <LinearLayout
+                    android:id="@+id/layoutVirtualAccountOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        style="@style/TextAppearance.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Currency"
+                        android:layout_marginTop="@dimen/spacing_md" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupBankCurrency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        app:singleSelection="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutInternetBankingOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TextAppearance.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Country"
+                        android:layout_marginTop="@dimen/spacing_md" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupBankCountry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        app:singleSelection="true" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvBankInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A virtual bank account will be generated for you to transfer into."
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:padding="@dimen/spacing_sm"
+                    android:background="@drawable/bg_input_field" />
+
+            </LinearLayout>
+
             <!-- Amount Input -->
             <TextView
+                android:id="@+id/tvAmountLabel"
                 style="@style/TextAppearance.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -306,9 +454,18 @@
                     style="@style/Widget.App.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter amount (min 5,000)"
+                    android:hint="Enter amount"
                     android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvAmountMinHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minimum: UGX 5,000"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_xs" />
 
             <!-- Fee Preview Section -->
             <LinearLayout

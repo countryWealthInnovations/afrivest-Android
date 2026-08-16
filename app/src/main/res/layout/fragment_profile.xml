@@ -101,6 +101,100 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Summary Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/background_dark_1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_default"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wallet" android:textColor="@color/text_secondary" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvSummaryWallet" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/primary_gold" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Portfolio" android:textColor="@color/text_secondary" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvSummaryPortfolio" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/success_green" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loans" android:textColor="@color/text_secondary" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvSummaryLoan" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/text_primary" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Account Status Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/background_dark_1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_default"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Account Status"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <include android:id="@+id/rowStatusEmail" layout="@layout/item_status_row" />
+                    <include android:id="@+id/rowStatusPhone" layout="@layout/item_status_row" />
+                    <include android:id="@+id/rowStatusKyc" layout="@layout/item_status_row" />
+                    <include android:id="@+id/rowStatusAccount" layout="@layout/item_status_row" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Advisor Section (only for advisors) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAdvisor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/background_dark_1"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/primary_gold"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Advisor"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAdvisorDashboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Availability &amp; Bookings"
+                        android:backgroundTint="@color/primary_gold"
+                        android:textColor="@color/background_dark_1" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Account Section -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -111,12 +205,10 @@
                 app:cardElevation="0dp"
                 app:strokeColor="@color/border_default"
                 app:strokeWidth="1dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -155,9 +247,28 @@
                         layout="@layout/item_settings_row"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="56dp"
+                        android:background="@color/border_default" />
+                    <include
+                        android:id="@+id/row_allocation"
+                        layout="@layout/item_settings_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="56dp"
+                        android:background="@color/border_default" />
+                    <include
+                        android:id="@+id/row_next_of_kin"
+                        layout="@layout/item_settings_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <!-- Security Section -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

@@ -19,14 +19,14 @@ class WalletRepository @Inject constructor(
 ) {
 
     /**
-     * Get dashboard data (user, wallets, recent transactions, statistics)
+     * Get home data (user, wallets, recent transactions, statistics)
      */
     suspend fun getDashboard(): Resource<Dashboard> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.getDashboard()
             handleResponse(response)
         } catch (e: Exception) {
-            Timber.e(e, "Get dashboard error")
+            Timber.e(e, "Get home error")
             Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
         }
     }

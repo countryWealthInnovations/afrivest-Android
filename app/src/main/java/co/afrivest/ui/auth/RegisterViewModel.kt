@@ -229,8 +229,17 @@ class RegisterViewModel @Inject constructor(
             try {
                 val deviceToken = FirebaseMessaging.getInstance().token.await()
 
-                // Prepare phone number
-                val fullPhone = _selectedCountry.value?.dialCode?.replace("+", "") + _phoneNumber.value
+                // Prepare phone number — clean and normalize
+                var cleanPhone = (_phoneNumber.value ?: "")
+                    .replace("+", "")
+                    .replace(" ", "")
+                    .replace("-", "")
+                    .trimStart('0')
+                val dialDigits = (_selectedCountry.value?.dialCode ?: "").replace("+", "")
+                if (cleanPhone.startsWith(dialDigits)) {
+                    cleanPhone = cleanPhone.removePrefix(dialDigits)
+                }
+                val fullPhone = dialDigits + cleanPhone
 
                 val androidId = android.provider.Settings.Secure.getString(
                     co.afrivest.AfriVestApplication.instance.contentResolver,

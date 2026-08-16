@@ -193,4 +193,32 @@ class AuthRepository @Inject constructor(
     fun isLoggedIn(): Boolean {
         return securePreferences.isLoggedIn()
     }
+
+    suspend fun sendPhoneOtp(): Resource<Boolean> {
+        return try {
+            val response = apiService.sendPhoneOtp()
+            if (response.isSuccessful && response.body()?.success == true) {
+                Resource.Success(true)
+            } else {
+                Resource.Error(response.body()?.message ?: "Failed to send code")
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Send phone OTP failed")
+            Resource.Error(e.message ?: "Failed to send code")
+        }
+    }
+
+    suspend fun verifyPhoneOtp(code: String): Resource<Boolean> {
+        return try {
+            val response = apiService.verifyPhoneOtp(OTPRequest(code))
+            if (response.isSuccessful && response.body()?.success == true) {
+                Resource.Success(true)
+            } else {
+                Resource.Error(response.body()?.message ?: "Invalid verification code")
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Verify phone OTP failed")
+            Resource.Error(e.message ?: "Invalid verification code")
+        }
+    }
 }

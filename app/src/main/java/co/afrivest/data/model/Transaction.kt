@@ -58,8 +58,9 @@ data class Transaction(
 @Parcelize
 data class TransactionUser(
     val id: Int,
+    val uuid: String? = null,
     val name: String,
-    val email: String
+    val email: String? = null
 ) : Parcelable
 
 @Parcelize
@@ -71,5 +72,6 @@ data class TransactionWallet(
 @Parcelize
 data class TransactionRecipient(
     val name: String,
+    val uuid: String? = null,
     val email: String? = null
 ) : Parcelable

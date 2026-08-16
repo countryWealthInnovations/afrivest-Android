@@ -1,7 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#1A1A1A"
+    android:padding="24dp">
 
+  <ImageButton
+      android:id="@+id/btnBack"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_gravity="start"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_arrow_back"
+      app:tint="@color/text_primary"
+      android:contentDescription="Back" />
 
+  <ImageView
+      android:id="@+id/statusIcon"
+      android:layout_width="56dp"
+      android:layout_height="56dp"
+      android:layout_marginTop="8dp"
+      android:src="@drawable/ic_shield"
+      app:tint="#EFBF04" />
+
+  <TextView
+      android:id="@+id/statusTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="Starting verification"
+      android:textColor="@color/text_primary"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:gravity="center" />
+
+  <TextView
+      android:id="@+id/statusSubtitle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text=""
+      android:textColor="#9CA3AF"
+      android:gravity="center"
+      android:visibility="gone" />
+
+  <ProgressBar
+      android:id="@+id/progressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:indeterminateTint="#EFBF04" />
+
+  <com.google.android.material.button.MaterialButton
+      android:id="@+id/retryButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:text="Try Again"
+      android:backgroundTint="#EFBF04"
+      android:textColor="#1A1A1A"
+      android:visibility="gone" />
 </LinearLayout>

@@ -63,7 +63,7 @@ object Constants {
         const val FOREX_CONVERT = "forex/convert"
 
         // Dashboard
-        const val DASHBOARD = "dashboard"
+        const val DASHBOARD = "home"
     }
 
     // Shared Preferences Keys

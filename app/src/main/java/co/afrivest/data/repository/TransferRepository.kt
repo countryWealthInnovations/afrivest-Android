@@ -13,7 +13,8 @@ class TransferRepository @Inject constructor(
 ) {
 
     suspend fun transferP2P(
-        recipientId: Int,
+        recipientId: Int? = null,
+        recipientUuid: String? = null,
         amount: Double,
         currency: String,
         description: String?
@@ -21,7 +22,8 @@ class TransferRepository @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val request = P2PTransferRequest(
-                    recipient_id = recipientId,
+                    recipient_id = if (recipientUuid == null) recipientId else null,
+                    recipient_uuid = recipientUuid,
                     amount = amount,
                     currency = currency,
                     description = description
@@ -46,27 +48,6 @@ class TransferRepository @Inject constructor(
         }
     }
 
-    suspend fun lookupContacts(phones: List<String>, emails: List<String>): List<AppContact> {
-        return try {
-            val body = mapOf("phones" to phones, "emails" to emails)
-            val response = apiService.lookupContacts(body)
-            if (response.isSuccessful) {
-                response.body()?.data?.contacts?.map {
-                    AppContact(
-                        id           = it.user_id.toString(),
-                        name         = it.name,
-                        phoneNumber  = it.phone,
-                        email        = null,
-                        userId       = it.user_id,
-                        isRegistered = true
-                    )
-                } ?: emptyList()
-            } else emptyList()
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
-
     suspend fun searchUser(query: String): Resource<UserSearchResponse> {
         return withContext(Dispatchers.IO) {
             try {
@@ -81,6 +62,48 @@ class TransferRepository @Inject constructor(
                     }
                 } else {
                     Resource.Error("User not found")
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Network error occurred")
+            }
+        }
+    }
+
+    suspend fun lookupByUuid(uuid: String): Resource<UserSearchResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.lookupByUuid(uuid)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val apiResponse = response.body()!!
+                    if (apiResponse.success) {
+                        Resource.Success(apiResponse.data)
+                    } else {
+                        Resource.Error(apiResponse.message ?: "User not found")
+                    }
+                } else {
+                    Resource.Error("User not found")
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message ?: "Network error occurred")
+            }
+        }
+    }
+
+    suspend fun lookupContacts(phones: List<String>, emails: List<String>): Resource<ContactLookupResponseData> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.lookupContacts(ContactLookupRequest(phones, emails))
+
+                if (response.isSuccessful && response.body() != null) {
+                    val apiResponse = response.body()!!
+                    if (apiResponse.success) {
+                        Resource.Success(apiResponse.data)
+                    } else {
+                        Resource.Error(apiResponse.message ?: "Lookup failed")
+                    }
+                } else {
+                    Resource.Error("Lookup failed")
                 }
             } catch (e: Exception) {
                 Resource.Error(e.message ?: "Network error occurred")

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -9,10 +9,12 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
     <application
         android:name=".AfriVestApplication"
         android:allowBackup="true"
@@ -25,23 +27,70 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false"
+        tools:replace="android:dataExtractionRules,android:fullBackupContent"
         tools:targetApi="33">
-
-        <activity android:name=".ui.profile.NotificationSettingsActivity" android:exported="false" />
-        <activity android:name=".ui.profile.EditProfileActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.profile.ChangePasswordActivity" android:exported="false" />
-        <activity android:name=".ui.assets.FileClaimActivity" android:exported="false" />
-        <activity android:name=".ui.assets.PolicyDetailActivity" android:exported="false" />
-        <activity android:name=".ui.assets.InvestmentDetailActivity" android:exported="false" />
-        <activity android:name=".ui.investments.ProductDetailActivity" android:exported="false" />
-        <activity android:name=".ui.transfer.WithdrawSuccessActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.transfer.SendMoneyActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.deposit.DepositProcessingActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.onboarding.CurrencySelectionActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.deposit.DepositStatusActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.deposit.DepositWebViewActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.onboarding.OnboardingActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-
+        <activity
+            android:name=".ui.auth.PhoneOTPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.loans.LoanDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.loans.RequestLoanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.loans.LoansActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.NotificationSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.profile.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.FileClaimActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.PolicyDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.assets.InvestmentDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.investments.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.transfer.WithdrawSuccessActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.transfer.SendMoneyActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.deposit.DepositProcessingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.onboarding.CurrencySelectionActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.deposit.DepositStatusActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.deposit.DepositWebViewActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -51,31 +100,111 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.main.MainActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.auth.LoginActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.auth.RegisterActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.auth.OTPActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.auth.ForgotPasswordActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.auth.ResetPasswordActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.wallet.WalletDetailActivity" android:exported="false" android:parentActivityName=".ui.main.MainActivity" />
-        <activity android:name=".ui.transactions.TransactionDetailActivity" android:exported="false" android:parentActivityName=".ui.main.MainActivity" />
-        <activity android:name=".ui.deposit.DepositActivity" android:exported="false" android:parentActivityName=".ui.main.MainActivity" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.investments.InvestmentProductsActivity" android:exported="false" />
-        <activity android:name=".ui.insurance.InsuranceListActivity" android:exported="false" />
-        <activity android:name=".ui.marketplace.GoldMarketplaceActivity" android:exported="false" />
-        <activity android:name=".ui.transfer.WithdrawActivity" android:exported="false" android:parentActivityName=".ui.main.MainActivity" android:windowSoftInputMode="adjustResize" />
-
-        <service android:name=".services.AfriVestMessagingService" android:exported="false">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.OTPActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.auth.ResetPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.wallet.WalletDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.transactions.TransactionDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.deposit.DepositActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.investments.InvestmentProductsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.insurance.InsuranceListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.marketplace.GoldMarketplaceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.transfer.WithdrawActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.deposit.BankTransferConfirmationActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="co.afrivest.ui.kyc.KycActivity"
+            android:exported="false" />
+        <activity
+            android:name="co.afrivest.ui.qr.MyQrActivity"
+            android:exported="false" />
+        <activity
+            android:name="co.afrivest.ui.qr.ScanQrActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.allocation.AllocationSettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.advisors.AdvisorsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.advisors.AdvisorDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.advisors.MyBookingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.advisors.AdvisorDashboardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.profile.NextOfKinActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <service
+            android:name=".services.AfriVestMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_notifications" />
-        <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/primary_gold" />
-        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="@string/default_notification_channel_id" />
-
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notifications" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary_gold" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -86,5 +215,4 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-
 </manifest>

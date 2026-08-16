@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class User(
     val id: Int,
+    val uuid: String? = null,
     val name: String,
     val email: String,
     val phone_number: String,
@@ -13,6 +14,7 @@ data class User(
     val status: String,
     val avatar_url: String? = null,
     val email_verified: Boolean = false,
+    val phone_verified: Boolean = false,
     val kyc_verified: Boolean = false,
     val default_currency: String? = null,
     val secondary_currency: String? = null,
@@ -23,5 +25,6 @@ data class User(
 ) : Parcelable {
     fun isActive(): Boolean = status == "active"
     fun isEmailVerified(): Boolean = email_verified
+    fun isPhoneVerified(): Boolean = phone_verified
     fun isKYCVerified(): Boolean = kyc_verified
 }

@@ -126,7 +126,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_bookmark"
+                            android:src="@drawable/ic_qr_scan"
                             app:tint="@color/text_secondary" />
                     </FrameLayout>
 
@@ -218,18 +218,28 @@
 
             <!-- Quick Send or Receive Money Section -->
             <LinearLayout
-                android:visibility="gone"
+                android:id="@+id/layoutContacts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/spacing_lg">
-
                 <TextView
                     style="@style/TextAppearance.BodyLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quick Send or Receive Money"
+                    android:text="Send to Contacts"
                     android:textColor="@color/text_primary" />
+
+                <!-- Shown when contacts permission not granted -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFindFriends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="Find friends on AfriVest"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_contacts"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
 
                 <!-- Horizontal RecyclerView for Contacts -->
                 <androidx.recyclerview.widget.RecyclerView
@@ -248,9 +258,19 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
-
-
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAdvisors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:text="Advisors"
+        android:textColor="@color/button_primary_text"
+        app:icon="@drawable/ic_user_placeholder"
+        app:iconTint="@color/button_primary_text"
+        app:backgroundTint="@color/primary_gold"
+        app:elevation="4dp" />
 </RelativeLayout>

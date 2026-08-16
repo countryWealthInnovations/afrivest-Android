@@ -5,7 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 // MARK: - P2P Transfer Request
 data class P2PTransferRequest(
-    val recipient_id: Int,
+    val recipient_id: Int? = null,
+    val recipient_uuid: String? = null,
     val amount: Double,
     val currency: String,
     val description: String?
@@ -53,7 +54,26 @@ data class UserSearchResponse(
 
 data class SearchedUser(
     val id: Int,
+    val uuid: String? = null,
     val name: String,
-    val email: String,
+    val email: String? = null,
     val phone_number: String?
+)
+
+// MARK: - Contact Lookup
+data class ContactLookupRequest(
+    val phones: List<String>,
+    val emails: List<String>
+)
+
+data class ContactLookupResponseData(
+    val contacts: List<LookupMatchedContact>
+)
+
+data class LookupMatchedContact(
+    val user_id: Int,
+    val uuid: String? = null,
+    val name: String,
+    val phone: String?,
+    val avatar_url: String?
 )

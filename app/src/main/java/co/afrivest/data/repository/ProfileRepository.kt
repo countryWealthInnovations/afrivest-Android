@@ -6,7 +6,9 @@ import co.afrivest.data.api.AvatarResponse
 import co.afrivest.data.api.UpdatePasswordRequest
 import co.afrivest.data.api.UpdateProfileRequest
 import co.afrivest.data.local.SecurePreferences
+import co.afrivest.data.model.ContactLookupRequest
 import co.afrivest.data.model.CurrencyRequest
+import co.afrivest.data.model.LookupMatchedContact
 import co.afrivest.data.model.ProfileData
 import co.afrivest.data.model.Resource
 import co.afrivest.data.model.User
@@ -15,6 +17,8 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
+import co.afrivest.data.api.AllocationResponse
+import co.afrivest.data.api.UpdateAllocationBody
 
 class ProfileRepository @Inject constructor(
     private val apiService: ApiService,
@@ -174,6 +178,30 @@ class ProfileRepository @Inject constructor(
         }
     }
 
+    suspend fun lookupContacts(
+        phones: List<String>,
+        emails: List<String>
+    ): Resource<List<LookupMatchedContact>> {
+        return try {
+            val response = apiService.lookupContacts(
+                ContactLookupRequest(phones, emails)
+            )
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body?.success == true) {
+                    Resource.Success(body.data.contacts)
+                } else {
+                    Resource.Error(body?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+                }
+            } else {
+                Resource.Error(response.message() ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Contact lookup failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
     private fun <T> handleResponse(response: Response<ApiResponse<T>>): Resource<T> {
         return if (response.isSuccessful) {
             val body = response.body()
@@ -193,5 +221,33 @@ class ProfileRepository @Inject constructor(
                 secondary_currency = secondary
             )
         )
+    }
+
+    suspend fun getAllocation(): Resource<AllocationResponse> {
+        return try {
+            val r = apiService.getAllocation()
+            if (r.isSuccessful && r.body()?.success == true && r.body()?.data != null) {
+                Resource.Success(r.body()!!.data)
+            } else {
+                Resource.Error(r.body()?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Get allocation failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
+    }
+
+    suspend fun updateAllocation(allocation: Map<String, Int>): Resource<Boolean> {
+        return try {
+            val r = apiService.updateAllocation(UpdateAllocationBody(allocation))
+            if (r.isSuccessful && r.body()?.success == true) {
+                Resource.Success(true)
+            } else {
+                Resource.Error(r.body()?.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Update allocation failed")
+            Resource.Error(e.message ?: Constants.ErrorMessages.UNKNOWN_ERROR)
+        }
     }
 }

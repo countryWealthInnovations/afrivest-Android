@@ -53,33 +53,53 @@
                     app:chipStrokeWidth="1dp" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipSuccess"
+                    android:id="@+id/chipDeposits"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Success"
+                    android:text="Deposits"
                     app:chipBackgroundColor="@color/chip_background"
-                    app:chipStrokeColor="@color/success_green"
+                    app:chipStrokeColor="@color/primary_gold"
                     app:chipStrokeWidth="1dp" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPending"
+                    android:id="@+id/chipWithdrawals"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pending"
+                    android:text="Withdrawals"
                     app:chipBackgroundColor="@color/chip_background"
-                    app:chipStrokeColor="@color/warning_yellow"
+                    app:chipStrokeColor="@color/primary_gold"
                     app:chipStrokeWidth="1dp" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFailed"
+                    android:id="@+id/chipSent"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Failed"
+                    android:text="Sent"
                     app:chipBackgroundColor="@color/chip_background"
-                    app:chipStrokeColor="@color/error_red"
+                    app:chipStrokeColor="@color/primary_gold"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipInvestments"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Investments"
+                    app:chipBackgroundColor="@color/chip_background"
+                    app:chipStrokeColor="@color/primary_gold"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipLoans"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loans"
+                    app:chipBackgroundColor="@color/chip_background"
+                    app:chipStrokeColor="@color/primary_gold"
                     app:chipStrokeWidth="1dp" />
 
             </com.google.android.material.chip.ChipGroup>

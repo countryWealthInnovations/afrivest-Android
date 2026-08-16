@@ -1,11 +1,11 @@
-package co.afrivest.ui.dashboard
+package co.afrivest.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import co.afrivest.databinding.FragmentDashboardBinding
+import co.afrivest.databinding.FragmentHomeBinding
 import co.afrivest.data.local.SecurePreferences
 import co.afrivest.utils.gone
 import co.afrivest.utils.visible
@@ -20,16 +20,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import co.afrivest.ui.dashboard.adapters.*
+import co.afrivest.ui.home.adapters.*
 import timber.log.Timber
 import co.afrivest.R
-import co.afrivest.data.model.Wallet
 import co.afrivest.data.model.InvestmentSummary
 import co.afrivest.ui.deposit.DepositActivity
 import co.afrivest.ui.insurance.InsuranceListActivity
 import co.afrivest.ui.investments.InvestmentProductsActivity
-import co.afrivest.ui.marketplace.GoldMarketplaceActivity
-import co.afrivest.ui.assets.AssetsFragment
 import com.google.android.material.button.MaterialButton
 import androidx.core.content.ContextCompat
 import co.afrivest.ui.transfer.SendMoneyActivity
@@ -38,11 +35,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment() {
+class HomeFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: DashboardViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     @Inject
     lateinit var securePreferences: SecurePreferences
 
@@ -57,7 +54,7 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,8 +65,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun refreshKYCBanner() {
-        val bannerHidden = preferencesManager.kycBannerHidden
-        if (!securePreferences.isKYCVerified() && !bannerHidden) {
+        if (!securePreferences.isKYCVerified()) {
             binding.kycBanner.root.visible()
         } else {
             binding.kycBanner.root.gone()
@@ -92,15 +88,10 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupKYCBanner() {
-        val bannerHidden = preferencesManager.kycBannerHidden
-        if (!securePreferences.isKYCVerified() && !bannerHidden) {
-            binding.kycBanner.root.visible()
-            binding.kycBanner.btnCompleteKYC.setOnClickListener {
-                showKYCComingSoon()
-            }
-        } else {
-            binding.kycBanner.root.gone()
+        binding.kycBanner.btnCompleteKYC.setOnClickListener {
+            startActivity(Intent(requireContext(), co.afrivest.ui.kyc.KycActivity::class.java))
         }
+        refreshKYCBanner()
     }
 
     private fun setupObservers() {
@@ -125,9 +116,10 @@ class DashboardFragment : Fragment() {
         viewModel.profile.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 binding.tvUserName.text = it.name
-
                 // Refresh KYC banner with server value
                 refreshKYCBanner()
+                // Hide advisors browse button for advisor accounts
+                updateAdvisorsFabVisibility(it.role)
 
                 // Handle avatar
                 if (it.isDefaultAvatar()) {
@@ -280,8 +272,10 @@ class DashboardFragment : Fragment() {
     private fun setupClickListeners() {
         // Header icons
         binding.btnBookmark.setOnClickListener {
-            // TODO: Navigate to bookmarks
-            Toast.makeText(requireContext(), "Bookmarks", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), co.afrivest.ui.qr.MyQrActivity::class.java))
+        }
+        binding.fabAdvisors.setOnClickListener {
+            startActivity(Intent(requireContext(), co.afrivest.ui.advisors.AdvisorsActivity::class.java))
         }
 
         binding.btnNotification.setOnClickListener {
@@ -289,6 +283,14 @@ class DashboardFragment : Fragment() {
             Toast.makeText(requireContext(), "Notifications", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun updateAdvisorsFabVisibility(role: String?) {
+        if (role == "advisor") {
+            binding.fabAdvisors.gone()
+        } else {
+            binding.fabAdvisors.visible()
+        }
     }
 
     private fun updateWalletBalance() {
@@ -305,16 +307,15 @@ class DashboardFragment : Fragment() {
     private fun setupQuickActions() {
         val actions = listOf(
             QuickAction(R.drawable.ic_chart, "Invest", "invest"),
+            QuickAction(R.drawable.ic_loan, "Loans", "loans"),
             QuickAction(R.drawable.ic_insurance, "Insurance", "insurance"),
-            QuickAction(R.drawable.ic_shopping, "Marketplace", "marketplace"),
             QuickAction(R.drawable.ic_send, "Send Money", "send")
         )
-
         val adapter = QuickActionsAdapter(actions) { action ->
             when (action.key) {
                 "invest" -> startActivity(Intent(requireContext(), InvestmentProductsActivity::class.java))
+                "loans" -> startActivity(Intent(requireContext(), co.afrivest.ui.loans.LoansActivity::class.java))
                 "insurance" -> startActivity(Intent(requireContext(), InsuranceListActivity::class.java))
-                "marketplace" -> startActivity(Intent(requireContext(), GoldMarketplaceActivity::class.java))
                 "send" -> startActivity(Intent(requireContext(), SendMoneyActivity::class.java))
             }
         }
@@ -341,36 +342,92 @@ class DashboardFragment : Fragment() {
             }
         }
 
-        // Show Hot Investments section only when user has no active investments
-        viewModel.profile.observe(viewLifecycleOwner) { profile ->
-            val hasInvestments = (profile?.investmentSummary?.activeInvestmentsCount ?: 0) > 0
-            if (hasInvestments) {
-                binding.layoutHotInvestments.gone()
+        // Always show Hot Investments section
+        binding.layoutHotInvestments.visible()
+    }
+
+    private val contactsPermissionLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                binding.btnFindFriends.gone()
+                readAndLookupContacts()
             } else {
-                binding.layoutHotInvestments.visible()
+                binding.btnFindFriends.visible()
+                binding.rvContacts.gone()
             }
+        }
+
+    private fun setupContacts() {
+        // Render matched contacts when the lookup returns
+        viewModel.matchedContacts.observe(viewLifecycleOwner) { contacts ->
+            if (contacts.isEmpty()) {
+                binding.rvContacts.gone()
+                binding.btnFindFriends.visible()
+                return@observe
+            }
+            binding.btnFindFriends.gone()
+            binding.rvContacts.visible()
+            val adapter = ContactsAdapter(contacts) { contact ->
+                val intent = Intent(requireContext(), SendMoneyActivity::class.java).apply {
+                    contact.userId?.let { putExtra("recipient_user_id", it) }
+                    contact.uuid?.let { putExtra("recipient_uuid", it) }
+                    putExtra("recipient_name", contact.name)
+                }
+                startActivity(intent)
+            }
+            binding.rvContacts.apply {
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                this.adapter = adapter
+            }
+        }
+
+        binding.btnFindFriends.setOnClickListener {
+            contactsPermissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+        }
+
+        // If permission already granted, load silently; otherwise show the button
+        val granted = ContextCompat.checkSelfPermission(
+            requireContext(), android.Manifest.permission.READ_CONTACTS
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+        if (granted) {
+            binding.btnFindFriends.gone()
+            readAndLookupContacts()
+        } else {
+            binding.btnFindFriends.visible()
+            binding.rvContacts.gone()
         }
     }
 
-    private fun setupContacts() {
-        val contacts = listOf(
-            Contact("Jo N", "JN", android.graphics.Color.parseColor("#2196F3")),
-            Contact("Eric", "E", android.graphics.Color.parseColor("#FF9800")),
-            Contact("John", "J", android.graphics.Color.parseColor("#4CAF50")),
-            Contact("Doe", "D", android.graphics.Color.parseColor("#E91E63")),
-            Contact("Kim", "K", android.graphics.Color.parseColor("#F44336")),
-            Contact("Stella", "S", android.graphics.Color.parseColor("#9C27B0"))
-        )
-
-        val adapter = ContactsAdapter(contacts) { contact ->
-            Timber.d("Contact clicked: ${contact.name}")
-            Toast.makeText(requireContext(), "Send money to ${contact.name} - Coming Soon", Toast.LENGTH_SHORT).show()
+    private fun readAndLookupContacts() {
+        val phones = mutableListOf<String>()
+        val emails = mutableListOf<String>()
+        try {
+            val resolver = requireContext().contentResolver
+            resolver.query(
+                android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                arrayOf(android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER),
+                null, null, null
+            )?.use { c ->
+                val idx = c.getColumnIndex(android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER)
+                while (c.moveToNext()) {
+                    if (idx >= 0) c.getString(idx)?.let { phones.add(it.replace(" ", "")) }
+                }
+            }
+            resolver.query(
+                android.provider.ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                arrayOf(android.provider.ContactsContract.CommonDataKinds.Email.ADDRESS),
+                null, null, null
+            )?.use { c ->
+                val idx = c.getColumnIndex(android.provider.ContactsContract.CommonDataKinds.Email.ADDRESS)
+                while (c.moveToNext()) {
+                    if (idx >= 0) c.getString(idx)?.let { emails.add(it.trim().lowercase()) }
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e("Contact read failed: ${e.message}")
         }
-
-        binding.rvContacts.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = adapter
-        }
+        viewModel.lookupContacts(phones.distinct().take(500), emails.distinct().take(500))
     }
 
     override fun onDestroyView() {

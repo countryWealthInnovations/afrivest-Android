@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import me.didit.sdk.DiditSdk
 
 @HiltAndroidApp
 class AfriVestApplication : Application() {
@@ -29,13 +30,12 @@ class AfriVestApplication : Application() {
     override fun onCreate() {
         instance = this
         super.onCreate()
-
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
             Timber.plant(CrashlyticsTree())
         }
-
+        DiditSdk.initialize(this)
         // Create notification channels
         createNotificationChannels()
         getFCMToken()

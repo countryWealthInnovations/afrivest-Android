@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SendMoneyViewModel @Inject constructor(
-    private val transferRepository: TransferRepository
+    private val transferRepository: TransferRepository,
+    private val preferencesManager: co.afrivest.data.local.PreferencesManager
 ) : ViewModel() {
 
     private val _contacts = MutableLiveData<List<AppContact>>()
@@ -25,6 +26,8 @@ class SendMoneyViewModel @Inject constructor(
 
     private val _selectedContact = MutableLiveData<AppContact?>()
     val selectedContact: LiveData<AppContact?> = _selectedContact
+
+    private val _recipientUuid = MutableLiveData<String?>(null)
 
     private val _amount = MutableLiveData<String>("")
     val amount: LiveData<String> = _amount
@@ -57,29 +60,34 @@ class SendMoneyViewModel @Inject constructor(
 
     private fun checkRegisteredUsers(contacts: List<AppContact>) {
         viewModelScope.launch {
-            try {
-                val phones = contacts.mapNotNull { it.phoneNumber }
-                val emails = contacts.mapNotNull { it.email }
-                val matched = transferRepository.lookupContacts(phones, emails)
+            val phones = contacts.mapNotNull { it.phoneNumber }
+            val emails = contacts.mapNotNull { it.email }
 
-                // Build phone → matched map
-                val phoneMap = matched.associateBy { it.phoneNumber }
+            if (phones.isEmpty() && emails.isEmpty()) return@launch
 
-                val updated = contacts.map { contact ->
-                    val match = contact.phoneNumber?.let { phoneMap[it] }
-                    if (match != null) {
-                        contact.copy(
-                            name         = match.name,
-                            userId       = match.userId,
-                            isRegistered = true
-                        )
-                    } else contact
+            when (val result = transferRepository.lookupContacts(phones, emails)) {
+                is Resource.Success -> {
+                    val matches = result.data?.contacts ?: emptyList()
+                    val phoneMap = matches.associateBy { it.phone }
+
+                    val updated = contacts.map { contact ->
+                        val match = contact.phoneNumber?.let { phoneMap[it] }
+                        if (match != null) {
+                            contact.copy(
+                                name = match.name,
+                                userId = match.user_id,
+                                isRegistered = true
+                            )
+                        } else contact
+                    }
+
+                    _contacts.value = updated
+                    _filteredContacts.value = updated.filter { it.isRegistered }
                 }
-
-                _contacts.value = updated
-                _filteredContacts.value = updated.filter { it.isRegistered }
-            } catch (e: Exception) {
-                android.util.Log.w("SendMoneyVM", "Bulk contact lookup failed: ${e.message}")
+                is Resource.Error -> {
+                    android.util.Log.w("SendMoneyVM", "Bulk contact lookup failed: ${result.message}")
+                }
+                is Resource.Loading -> {}
             }
         }
     }
@@ -102,6 +110,45 @@ class SendMoneyViewModel @Inject constructor(
 
     fun selectContact(contact: AppContact) {
         _selectedContact.value = contact
+        _recipientUuid.value = null
+        validateForm()
+    }
+
+    fun selectByUserId(userId: Int, name: String) {
+        _selectedContact.value = AppContact(
+            id = java.util.UUID.randomUUID().toString(),
+            name = name, phoneNumber = null, email = null,
+            userId = userId, isRegistered = true
+        )
+        _recipientUuid.value = null
+        validateForm()
+    }
+
+    fun selectByUuid(uuid: String) {
+        _recipientUuid.value = uuid
+        _selectedContact.value = AppContact(
+            id = java.util.UUID.randomUUID().toString(),
+            name = "Loading...", phoneNumber = null, email = null,
+            userId = null, isRegistered = true
+        )
+        viewModelScope.launch {
+            when (val result = transferRepository.lookupByUuid(uuid)) {
+                is Resource.Success -> {
+                    val user = result.data?.user
+                    if (result.data?.found == true && user != null) {
+                        _selectedContact.value = AppContact(
+                            id = java.util.UUID.randomUUID().toString(),
+                            name = user.name,
+                            phoneNumber = user.phone_number,
+                            email = user.email,
+                            userId = user.id,
+                            isRegistered = true
+                        )
+                    }
+                }
+                else -> {}
+            }
+        }
         validateForm()
     }
 
@@ -146,21 +193,30 @@ class SendMoneyViewModel @Inject constructor(
 
     private fun validateForm() {
         val amountValue = _amount.value?.toDoubleOrNull() ?: 0.0
-        _isFormValid.value = _selectedContact.value != null && amountValue >= 5000
+        val minAmount = when (preferencesManager.defaultCurrency) {
+            "UGX" -> 5000.0
+            "KES" -> 50.0
+            "NGN" -> 500.0
+            else -> 1.0
+        }
+        val hasRecipient = (_selectedContact.value?.userId != null) || (_recipientUuid.value != null)
+        _isFormValid.value = hasRecipient && amountValue >= minAmount
     }
 
     fun initiateTransfer() {
-        val contact = _selectedContact.value ?: return
-        val userId = contact.userId ?: return
         val amountValue = _amount.value?.toDoubleOrNull() ?: return
+        val uuid = _recipientUuid.value
+        val userId = _selectedContact.value?.userId
+        if (uuid == null && userId == null) return
 
         viewModelScope.launch {
             _transferResult.value = Resource.Loading()
 
             val result = transferRepository.transferP2P(
                 recipientId = userId,
+                recipientUuid = uuid,
                 amount = amountValue,
-                currency = "UGX",
+                currency = preferencesManager.defaultCurrency ?: "UGX",
                 description = _description.value?.ifEmpty { null }
             )
 

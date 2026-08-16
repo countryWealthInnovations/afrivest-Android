@@ -38,6 +38,14 @@ interface ApiService {
     @POST(Constants.Endpoints.RESEND_OTP)
     suspend fun resendOTP(): Response<ApiResponse<OTPResponse>>
 
+    @POST("auth/phone/send-otp")
+    suspend fun sendPhoneOtp(): Response<ApiResponse<PhoneOtpData>>
+
+    @POST("auth/phone/verify-otp")
+    suspend fun verifyPhoneOtp(
+        @Body request: OTPRequest
+    ): Response<ApiResponse<PhoneVerifyData>>
+
     @POST(Constants.Endpoints.FORGOT_PASSWORD)
     suspend fun forgotPassword(
         @Body request: ForgotPasswordRequest
@@ -78,11 +86,6 @@ interface ApiService {
         @Body body: CurrencyRequest
     ): Response<ApiResponse<Unit>>
 
-    @POST("contacts/lookup")
-    suspend fun lookupContacts(
-        @Body body: Map<String, List<String>>
-    ): Response<ApiResponse<ContactLookupData>>
-
     @GET("profile/notification-settings")
     suspend fun getNotificationSettings(): Response<ApiResponse<NotificationSettingsData>>
 
@@ -117,7 +120,10 @@ interface ApiService {
     suspend fun depositMobileMoney(@Body request: MobileMoneyDepositRequest): Response<ApiResponse<DepositResponse>>
 
     @POST("deposits/bank-transfer")
-    suspend fun depositBankTransfer(@Body request: BankTransferRequest): Response<ApiResponse<DepositResponse>>
+    suspend fun depositBankTransfer(@Body request: BankDepositRequest): Response<ApiResponse<DepositResponse>>
+
+    @POST("deposits/bank")
+    suspend fun depositBank(@Body request: BankDepositRequest): Response<ApiResponse<BankDepositApiResponse>>
 
     @GET("deposits/{id}/check")
     suspend fun checkDepositStatus(@Path("id") id: String): Response<ApiResponse<TransactionStatus>>
@@ -127,6 +133,7 @@ interface ApiService {
 
     @POST(Constants.Endpoints.DEPOSIT_CARD)
     suspend fun depositCard(@Body request: CardDepositRequest): Response<ApiResponse<DepositResponse>>
+
 
     // ==================== TRANSACTIONS ====================
 
@@ -252,8 +259,116 @@ interface ApiService {
         @Query("query") query: String
     ): Response<ApiResponse<UserSearchResponse>>
 
-    // ==================== WITHDRAWALS ====================
+    @GET("users/lookup-by-uuid/{uuid}")
+    suspend fun lookupByUuid(
+        @Path("uuid") uuid: String
+    ): Response<ApiResponse<UserSearchResponse>>
 
+    @GET("users/qr")
+    suspend fun getMyQr(): Response<ApiResponse<QrData>>
+
+    @GET("investment-agreement")
+    suspend fun getInvestmentAgreement(): Response<ApiResponse<InvestmentAgreementData>>
+
+    // ==================== ADVISORS (user) ====================
+    @GET("advisors")
+    suspend fun getAdvisors(): Response<ApiResponse<List<Advisor>>>
+
+    @GET("advisors/{id}")
+    suspend fun getAdvisor(@Path("id") id: Int): Response<ApiResponse<Advisor>>
+
+    @POST("advisors/{id}/book")
+    suspend fun bookAdvisor(
+        @Path("id") id: Int,
+        @Body body: BookAdvisorBody
+    ): Response<ApiResponse<BookingWrapper>>
+
+    @GET("advisors/bookings/my")
+    suspend fun getMyBookings(): Response<ApiResponse<List<AdvisorBookingDto>>>
+
+    // ==================== ADVISOR (advisor side) ====================
+    @GET("advisor/home")
+    suspend fun getAdvisorDashboard(): Response<ApiResponse<AdvisorDashboard>>
+
+    @PUT("advisor/profile")
+    suspend fun updateAdvisorProfile(@Body body: UpdateAdvisorProfileBody): Response<ApiResponse<Unit>>
+
+    @PUT("advisor/availability")
+    suspend fun updateAdvisorAvailability(@Body body: UpdateAvailabilityBody): Response<ApiResponse<Unit>>
+
+    @POST("advisor/date-blocks")
+    suspend fun blockAdvisorDate(@Body body: BlockDateBody): Response<ApiResponse<Unit>>
+
+    @DELETE("advisor/date-blocks/{id}")
+    suspend fun unblockAdvisorDate(@Path("id") id: Int): Response<ApiResponse<Unit>>
+
+    @POST("investment-agreement/accept")
+    suspend fun acceptInvestmentAgreement(): Response<ApiResponse<Unit>>
+
+    @GET("profile/allocation")
+    suspend fun getAllocation(): Response<ApiResponse<AllocationResponse>>
+
+    @PUT("profile/allocation")
+    suspend fun updateAllocation(
+        @Body body: UpdateAllocationBody
+    ): Response<ApiResponse<Unit>>
+
+    @POST("contacts/lookup")
+    suspend fun lookupContacts(
+        @Body request: ContactLookupRequest
+    ): Response<ApiResponse<ContactLookupResponseData>>
+
+    // ==================== NEXT OF KIN ====================
+    @GET("next-of-kin")
+    suspend fun getNextOfKin(): Response<ApiResponse<NextOfKinData?>>
+
+    @POST("next-of-kin")
+    suspend fun saveNextOfKin(
+        @Body body: NextOfKinRequest
+    ): Response<ApiResponse<NextOfKinData>>
+
+    @DELETE("next-of-kin")
+    suspend fun deleteNextOfKin(): Response<ApiResponse<Unit>>
+
+    // ==================== KYC ====================
+    @POST("kyc/session")
+    suspend fun createKycSession(): Response<ApiResponse<KycSessionData>>
+
+    @GET("kyc/status")
+    suspend fun getKycStatus(): Response<ApiResponse<KycStatusData>>
+
+    // ==================== LOANS ====================
+    @GET("loans/terms")
+    suspend fun getLoanTerms(): Response<ApiResponse<List<LoanTerm>>>
+
+    @GET("loans/available")
+    suspend fun getAvailableLoans(): Response<ApiResponse<List<Loan>>>
+
+    @GET("loans/my")
+    suspend fun getMyLoans(): Response<ApiResponse<MyLoans>>
+
+    @POST("loans/request")
+    suspend fun requestLoan(
+        @Body body: LoanRequestBody
+    ): Response<ApiResponse<LoanWrapper>>
+
+    @GET("loans/{uuid}")
+    suspend fun getLoan(
+        @Path("uuid") uuid: String
+    ): Response<ApiResponse<Loan>>
+
+    @POST("loans/{uuid}/fund")
+    suspend fun fundLoan(
+        @Path("uuid") uuid: String
+    ): Response<ApiResponse<LoanWrapper>>
+
+    @POST("loans/{uuid}/repay")
+    suspend fun repayLoan(
+        @Path("uuid") uuid: String,
+        @Body body: LoanRepayBody
+    ): Response<ApiResponse<LoanWrapper>>
+
+    // ==================== WITHDRAWALS ====================
     @POST(Constants.Endpoints.WITHDRAW_MOBILE_MONEY)
     suspend fun withdrawMobileMoney(
         @Body request: WithdrawRequest
@@ -310,6 +425,68 @@ data class OTPRequest(
     val code: String
 )
 
+data class PhoneOtpData(
+    val otp_sent: Boolean?,
+    val channel: String?,
+    val otp_code: String?
+)
+
+data class PhoneVerifyData(
+    val phone_verified: Boolean?
+)
+
+data class KycSessionData(
+    val session_id: String?,
+    val session_token: String?,
+    val url: String?
+)
+
+data class KycStatusData(
+    val status: String?,
+    val verified: Boolean?,
+    val reviewed_at: String?
+)
+
+data class QrData(
+    val uuid: String,
+    val name: String?,
+    val phone_number: String?
+)
+
+data class InvestmentAgreementData(
+    val version: String,
+    val title: String,
+    val body: String,
+    val accepted: Boolean
+)
+
+data class AllocationResponse(
+    val allocation: Map<String, Int>,
+    val allowed_targets: List<String>
+)
+
+data class NextOfKinRequest(
+    val name: String,
+    val relationship: String,
+    val phone_number: String,
+    val email: String
+)
+
+data class NextOfKinData(
+    val id: Int,
+    val name: String,
+    val relationship: String,
+    val relationship_label: String?,
+    val phone_number: String,
+    val email: String,
+    val notified: Boolean,
+    val notified_at: String?
+)
+
+data class UpdateAllocationBody(
+    val allocation: Map<String, Int>
+)
+
 data class ForgotPasswordRequest(
     val email: String
 )
@@ -351,7 +528,33 @@ data class MobileMoneyDepositRequest(
 
 data class BankDepositRequest(
     val amount: Double,
-    val currency: String
+    val currency: String,
+    val type: String,
+    val account_number: String? = null,
+    val bank_code: String? = null
+)
+
+data class BankDepositApiResponse(
+    val transaction_id: Int,
+    val reference: String,
+    val amount: Double,
+    val currency: String,
+    val status: String? = null,
+    val payment_data: BankPaymentApiData?
+)
+
+data class BankPaymentApiData(
+    val mode: String?,
+    val redirect_url: String? = null,
+    val authorization_url: String? = null,
+    val transfer_account: String? = null,
+    val transfer_bank: String? = null,
+    val transfer_reference: String? = null,
+    val transfer_note: String? = null,
+    val transfer_amount: Double? = null,
+    val account_expiration: String? = null,
+    val sort_code: String? = null,
+    val account_number: String? = null
 )
 
 data class BankWithdrawalRequest(

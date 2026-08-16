@@ -6,10 +6,6 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # ==================== CRITICAL: Generic Type Signatures ====================
-# Prevent R8 from optimizing generic hierarchies used by reflection
--keep class * {
-    *;
-}
 # Preserve generic type information needed by Gson and Retrofit
 -keepattributes Signature
 -keepattributes *Annotation*
@@ -51,8 +47,6 @@
 -keep class co.afrivest.data.local.** { *; }
 
 # ==================== Kotlin ====================
-# TEMP: disable optimization to confirm R8 cause
--dontoptimize
 -dontwarn kotlin.**
 -keep class kotlin.Metadata { *; }
 -keepclassmembers class kotlin.Metadata {
