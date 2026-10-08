@@ -76,15 +76,21 @@ class RequestLoanActivity : AppCompatActivity() {
 
     private fun updateEstimate() {
         val amount = binding.etAmount.text.toString().toDoubleOrNull() ?: 0.0
-        val rate = selectedTerm?.interest_rate?.toDoubleOrNull() ?: 0.0
-        if (amount <= 0 || selectedTerm == null) {
-            binding.tvEstimate.text = "Enter an amount to see estimated interest"
+        val term = selectedTerm
+        val rate = term?.interest_rate?.toDoubleOrNull() ?: 0.0
+        val feeRate = term?.handling_fee_percentage?.toDoubleOrNull() ?: 0.0
+        if (amount <= 0 || term == null) {
+            binding.tvEstimate.text = "Enter an amount to see loan terms"
             return
         }
         val interest = amount * rate / 100.0
+        val handlingFee = amount * feeRate / 100.0
+        val total = amount + interest
+        val dueDate = java.text.SimpleDateFormat("MMM d, yyyy", java.util.Locale.getDefault())
+            .format(java.util.Date(System.currentTimeMillis() + term.term_days.toLong() * 86400000L))
         binding.tvEstimate.text =
-            "Estimated interest: %.2f  •  Repay approx: %.2f\nA handling fee applies and the exact breakdown is shown after you submit."
-                .format(interest, amount + interest)
+            "Interest rate: %.1f%%\nInterest: %.2f\nHandling fee: %.2f\nTotal repayment: %.2f\nDue date: %s"
+                .format(rate, interest, handlingFee, total, dueDate)
     }
 
     private fun submit() {

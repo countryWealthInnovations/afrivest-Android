@@ -7,7 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class LoanTerm(
     val term: String,
     val term_days: Int,
-    val interest_rate: String
+    val interest_rate: String,
+    val handling_fee_percentage: String = "0"
 ) : Parcelable
 
 @Parcelize
